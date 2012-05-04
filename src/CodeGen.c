@@ -1488,14 +1488,21 @@ int codeGen (struct Node * node) {
 				char* tlen = strCatAlloc("", 1, tmpVab(INT_T, node->scope[1]));
 				char* tc = strCatAlloc("", 1, tmpVab(INT_T, node->scope[1]));
             	node->code = codeFrontDecl(node->scope[0] );
-				node->code = strRightCatAlloc(node->code, "" , 35,
-					INDENT[node->scope[0]], sTypeName(ltype), " * ", ti, ";\n",
+				node->code = strRightCatAlloc(node->code, "" , 25,
+					INDENT[node->scope[0]], sTypeName(ltype), " * ", ti, " = NULL;\n",
 					INDENT[node->scope[0]], "int ", tlen, " = g_list_length(", sg->code, "->list);\n",
 					INDENT[node->scope[0]], "int ", tc, ";\n",
-					INDENT[node->scope[0]], "for (", tc, "=0; ", tc, "<", tlen, "; ", tc, "++) {\n",
-					INDENT[node->scope[0]], ti, " = g_list_nth_data ( ", sg->code, "->list, ", tc, " );\n",
-					rt->code,
-				    INDENT[node->scope[0]], "} //END_OF_FOREACH\n");
+					INDENT[node->scope[0]], "for (", tc, "=0; ", tc, "<", tlen, "; ", tc, "++) {\n");
+				if(ltype == VERTEX_T)
+					node->code = strRightCatAlloc(node->code, "", 8,
+						INDENT[node->scope[0]], "assign_operator_vertex(&", ti, ", g_list_nth_data ( ", sg->code, "->list, ", tc, " ) );\n");
+				else
+					node->code = strRightCatAlloc(node->code, "", 8,
+						INDENT[node->scope[0]], "assign_operator_edge(&", ti, ", g_list_nth_data ( ", sg->code, "->list, ", tc, " ) );\n");
+				node->code = strRightCatAlloc(node->code, "", 3, 
+						//INDENT[node->scope[0]], ti, " = g_list_nth_data ( ", sg->code, "->list, ", tc, " );\n",
+						rt->code,
+				    	INDENT[node->scope[0]], "} //END_OF_FOREACH\n");
 				free(tlen);free(tc);
 				/*if(sg->tmp[0]==REMOVE_DYN) {
 					node->code = strRightCatAlloc(node->code,"", 5,
