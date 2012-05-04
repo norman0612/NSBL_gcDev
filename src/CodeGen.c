@@ -1507,7 +1507,8 @@ int codeGen (struct Node * node) {
 				char* tlen = strCatAlloc("", 1, tmpVab(INT_T, node->scope[1]));
 				char* tc = strCatAlloc("", 1, tmpVab(INT_T, node->scope[1]));
             	node->code = codeFrontDecl(node->scope[0] );
-				node->code = strRightCatAlloc(node->code, "" , 25,
+				node->code = strRightCatAlloc(node->code, "" , 27,
+                    INDENT[node->scope[0]], "// START_FOREACH\n",
 					INDENT[node->scope[0]], sTypeName(ltype), " * ", ti, " = NULL;\n",
 					INDENT[node->scope[0]], "int ", tlen, " = g_list_length(", sg->code, "->list);\n",
 					INDENT[node->scope[0]], "int ", tc, ";\n",
