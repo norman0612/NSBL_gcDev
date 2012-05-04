@@ -51,11 +51,11 @@ int cut = 25;
 la = ll?[@age>cut || !@male];
 
 print << "==========MATCH After=========\n" << la;
-print << "==========ALL VERTEX =========\n";
+//print << "==========ALL VERTEX =========\n";
 print << v1 << v2 << v3; 
 
 // func_literal
-//func cond(int k):bool = { return @age>k || !@male ; };
-//la = ll?[cond(cut)];
-//print << "==========MATCH cond=========\n" << la;
+func cond(int k):bool = { return @age>k || !@male ; };
+la = ll?[cond(cut)];
+print << "==========MATCH cond=========\n" << la;
 

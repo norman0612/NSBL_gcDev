@@ -833,6 +833,7 @@ void main_init(char * fileName) {
 	existPIPE = 0;
     returnList = NULL;
     noReturn = NULL;
+    FuncParaList = NULL;
     OUTFILE = strCatAlloc("",2,fileName,".c");
 }
 

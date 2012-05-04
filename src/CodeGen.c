@@ -27,8 +27,9 @@ int     inMATCH,                // flags to indicate : inside of match operator
         existMATCH,             //                   : exist match operator in subtree of AST
         existPIPE,              //                   : exist pipe operator in subtree of AST
         nMATCHsVab;             // count number of dynamic variables in Match
-GList *returnList, *noReturn;
+GList *returnList, *noReturn, *FuncParaList;
 char * matchStaticVab, *frontDeclExp, *frontDeclExpTmp1;
+struct Node * FuncBody;
 
 void derivedTypeInitCode(struct Node* node, int type, int isglobal){
 	if(node->token == AST_COMMA){
@@ -39,9 +40,9 @@ void derivedTypeInitCode(struct Node* node, int type, int isglobal){
 	}else if (node->token == IDENTIFIER) {
         codeGen(node);
         if(isglobal)
-            node->code = strCatAlloc("",3 ,INDENT[node->scope[0]],node->symbol->bind,"; ");
+            node->code = strCatAlloc("",3 ,INDENT[node->scope[0]],node->symbol->bind," = NULL; ");
         else
-            node->code = strCatAlloc("",5 ,INDENT[node->scope[0]],sTypeName(type), " * ",node->symbol->bind,"; ");
+            node->code = strCatAlloc("",5 ,INDENT[node->scope[0]],sTypeName(type), " * ",node->symbol->bind," = NULL; ");
         
 		switch(type){
 			case GRAPH_T:
@@ -69,9 +70,9 @@ void derivedTypeInitCode(struct Node* node, int type, int isglobal){
             return;
         }
         if(isglobal)
-            node->code = strCatAlloc("",3 ,INDENT[node->scope[0]],node->child[0]->symbol->bind,"; ");
+            node->code = strCatAlloc("",3 ,INDENT[node->scope[0]],node->child[0]->symbol->bind," = NULL; ");
         else
-            node->code = strCatAlloc("",5 ,INDENT[node->scope[0]],sTypeName(type), " * ",node->child[0]->symbol->bind,"; ");
+            node->code = strCatAlloc("",5 ,INDENT[node->scope[0]],sTypeName(type), " * ",node->child[0]->symbol->bind," = NULL; ");
         switch(type) {
             case GRAPH_T:
                 node->code = strRightCatAlloc(node->code,"",5 ,"assign_operator_graph ( &( ",
@@ -109,14 +110,14 @@ void stringInitCode(struct Node* node, int type, int isglobal){
                 node->child[0]->symbol->bind, " = ", node->child[1]->code, ";\n"); 
 		else
 			node->code = strCatAlloc("",7,INDENT[node->scope[0]], 
-                sTypeName(type), " ", node->child[0]->symbol->bind, " = ", node->child[1]->code, ";\n");	
+                sTypeName(type), " * ", node->child[0]->symbol->bind, " = ", node->child[1]->code, ";\n");	
         if(node->scope[0]==0) node->codetmp = strCatAlloc("",1,node->child[0]->codetmp);
 	}else{
         codeGen(node);
 		if(isglobal)
 			node->code = strCatAlloc("",3,INDENT[node->scope[0]], node->symbol->bind, " = g_string_new(\"\");\n"); 
 		else
-			node->code = strCatAlloc("",5,INDENT[node->scope[0]], sTypeName(type), " ", node->symbol->bind, " = g_string_new(\"\");\n");
+			node->code = strCatAlloc("",5,INDENT[node->scope[0]], sTypeName(type), " * ", node->symbol->bind, " = g_string_new(\"\");\n");
 	}
 }
 
@@ -388,8 +389,6 @@ char * codeForInitTmpVabInScope ( ScopeId sid, int type, GList * gl, ScopeId lvl
     return code;
 }
 
-            
-
 char * allFreeCodeInScope(ScopeId sid, GList * gl, ScopeId lvl) {
     char * sc = codeForFreeDerivedVabInScope( sid, STRING_T, gl, lvl, 0 );
     char * vc = codeForFreeDerivedVabInScope( sid, VERTEX_T, gl, lvl, 0 );
@@ -407,6 +406,8 @@ char * allFreeCodeInScope(ScopeId sid, GList * gl, ScopeId lvl) {
 
     char * rlt = strCatAlloc("", 13, sc, vc, ec, gc, vlc, elc,
                     tsc, tvc, tec, tgc, tvlc, telc, tatt );
+    free(sc);free(vc);free(ec);free(gc);free(vlc);free(elc);
+    free(tsc);free(tvc);free(tec);free(tgc);free(tvlc);free(telc);free(tatt);
     return rlt;
 }
 
@@ -417,9 +418,9 @@ char * allInitTmpVabCodeInScope(ScopeId sid, GList * gl, ScopeId lvl) {
     char * tvlc = codeForInitTmpVabInScope( sid, VLIST_T, gl, lvl, 1 );
     char * telc = codeForInitTmpVabInScope( sid, ELIST_T, gl, lvl, 1 );
     char * tatt = codeForInitTmpVabInScope( sid, DYN_ATTR_T, gl, lvl, 1);
-    char * rlt =  strCatAlloc("", 6, 
-        tvc, tec,tgc,tvlc,telc,tatt);
+    char * rlt =  strCatAlloc("", 6, tvc, tec,tgc,tvlc,telc,tatt);
     
+    free(tvc);free(tec);free(tgc);free(tvlc);free(telc);free(tatt);
     return rlt;
 }
 
@@ -451,6 +452,29 @@ GList * getReturnVab( struct Node * node, GList * gl) {
     for (i=0; i<node->nch; ++i) {
         gl = getReturnVab( node->child[i], gl );
     }
+    return gl;
+}
+
+GList * getAllScopeIdInside( struct Node * node, GList * gl, struct Node * target, int * rlt) {
+    if (node == NULL) return gl;
+    int flag = (node == target);
+    if (flag == 0) {   // I am not target, try my child
+        int i;
+        for (i=0; i<node->nch; ++i) {
+            gl = getAllScopeIdInside( node->child[i], gl, target, &flag );
+            if(flag != 0) break; // only one path
+        }
+    }
+    if (flag == 1) { // find it 
+        int tl = g_list_length( gl );
+        int i, fflag = 0;
+        for ( i=0; i<tl; i++ ) {   // check duplicate
+            int * ii = g_list_nth_data( gl , i );
+            if ( *ii == node->scope[1] ) { fflag = 1; break; }
+        }
+        if (!fflag) gl = g_list_append( gl, &(node->scope[1]) );
+    }
+    *rlt = flag;
     return gl;
 }
 
@@ -1288,8 +1312,13 @@ int codeGen (struct Node * node) {
                 if(token == AST_COMP_STAT) {  // GC
                     freecode = allFreeCodeInScope(node->child[1]->scope[1], NULL, node->child[1]->scope[0] );
                     initcode = allInitTmpVabCodeInScope( node->child[1]->scope[1], NULL, node->child[1]->scope[0] );
+                    node->code = strCatAlloc("",7,INDENT[node->scope[0]],"{\n",initcode, 
+                        node->child[0]->code,freecode,INDENT[node->scope[0]],"} // END_COMP\n");
                 }
-                node->code = strCatAlloc("",6,INDENT[node->scope[0]],"{\n",initcode, node->child[0]->code,freecode,"} // END_COMP\n");
+                else {
+                    node->code = strCatAlloc("",5,INDENT[node->scope[0]],"// BEGIN_COMP_NO_SCOPE\n",
+                        node->child[0]->code, INDENT[node->scope[0]],"// END_COMP_NO_SCOPE\n");
+                }
             }
             break;
         case AST_STAT_LIST :
@@ -1500,44 +1529,72 @@ int codeGen (struct Node * node) {
                 node->code = strCatAlloc("", 2,INDENT[node->scope[0]], "continue ;\n");
             }
             break;
-        case AST_JUMP_RETURN :
+        case AST_JUMP_RETURN : { 
             if(inFunc<0) {
                 ERRNO = ErrorCallReturnOutsideOfFunc;
                 errorInfo(ERRNO, node->line, "call `return' outside of function or function literal\n");
                 return ERRNO;
             }
             else {
-                int rtype = * (int *) g_list_nth_data ( returnList, inFunc );
-                (* (int *) g_list_nth_data ( noReturn, inFunc ) ) ++ ;
+                int rtype = * (int *) g_list_nth_data ( returnList, inFunc );   // obtain return type
+                (* (int *) g_list_nth_data ( noReturn, inFunc ) ) ++ ;          // count number of returns
+                char * freecode = NULL, * rtcode = NULL;
+                int iptr = (rtype == VLIST_T || rtype == ELIST_T || rtype == VERTEX_T || rtype == EDGE_T || rtype == GRAPH_T || rtype == STRING_T) ? 1 : 0;
+                // type checking and return code
                 if (node->nch == 0) {
                     if (rtype != VOID_T) {
                         ERRNO = ErrorInvalidReturnType;
                         errorInfo(ERRNO, node->line, "invalid return type.\n");
                         return ERRNO;
                     }
-                    node->code = strCatAlloc("", 2,INDENT[node->scope[0]], "return ;\n");
+                    rtcode = strCatAlloc("", 2,INDENT[node->scope[0]], "return ;\n");
                 } 
                 else {
                     codeGen(node->child[0]);
-                    node->code = codeFrontDecl(node->scope[0] );
+                    node->code = codeFrontDecl( node->scope[0]);                    // collect front code
+                    rtcode = codeFrontDecl(node->scope[0] );
                     if (rtype != node->child[0]->type && node->child[0]->type >= 0) {
                         ERRNO = ErrorInvalidReturnType;
                         errorInfo(ERRNO, node->line, "invalid return type.\n");
                         return ERRNO;
                     }
                     else if (rtype == node->child[0]->type && node->child[0]->type >= 0) {
-                        node->code = strRightCatAlloc(node->code, "", 4,INDENT[node->scope[0]], "return ",node->child[0]->code,";\n");
+                        char * tmp = tmpReturnTmp();
+                        node->code = strRightCatAlloc(node->code, "", 7,
+                            INDENT[node->scope[0]], sTypeName(rtype), iptr ? " * ":" ", tmp, " = ",
+                                node->child[0]->code,";\n");
+                        rtcode = strCatAlloc("",4, INDENT[node->scope[0]], "return ", tmp, ";\n");
                     }
                     else {
-                        node->code = strRightCatAlloc(node->code,"", 4, 
-                            INDENT[node->scope[0]], "return ",
-                            codeGetAttrVal( node->child[0]->code, rtype, node->line ),";\n" ); 
+                        char * tmp = tmpReturnTmp();
+                        node->code = strRightCatAlloc(node->code, "", 7,
+                            INDENT[node->scope[0]], sTypeName(rtype), iptr ? " * ":" ", tmp, " = ",
+                            codeGetAttrVal( node->child[0]->code, rtype, node->line ),
+                            ";\n");
+                        rtcode = strCatAlloc("",4, INDENT[node->scope[0]],"return ", tmp, ";\n");
                     }
                 }
+                // get all scope ids from the funcbody to this return
+                int found = 0;
+                GList * allscope = getAllScopeIdInside(FuncBody, NULL, node, &found);
+                if (found == 0) {
+                    fprintf(stderr, "coding wrong for getAllScopeIdInside !!!!!\n");
+                }
+                // freecode for GC
+                int tl = g_list_length ( allscope );
+                int i;
+                for ( i=0; i<tl; i++ ) {
+                    int * pi = g_list_nth_data ( allscope, i );
+                    char * tcode = allFreeCodeInScope( *pi, FuncParaList, node->scope[0] );
+                    freecode = strRightCatAlloc( freecode, "", 1, tcode );
+                    free(tcode);
+                }
+                node->code = strRightCatAlloc( node->code, "", 2, freecode, rtcode ); 
             }
             break;
         // 1> break continue is in scope of loop    // DONE
         // 2> return is in scope of func, and return type is correct //DONE
+        } 
 
 /************************************************************************************/
         case AST_FUNC : {                // function_definition
@@ -1547,6 +1604,11 @@ int codeGen (struct Node * node) {
             codeGen(sg); 
             int zero = 0, nort;
             inFunc++; 
+            // set para list to global
+            FuncParaList = getAllParaInFunc(sg->child[1], NULL);
+            // get all scope ids in the body of func
+            FuncBody = rt;
+            // get return type and number returns
             returnList = g_list_append(returnList, (gpointer) & (lf->lexval.ival) ); 
             noReturn = g_list_append( noReturn, (gpointer) &zero);
             codeGen(rt); 
@@ -1554,31 +1616,42 @@ int codeGen (struct Node * node) {
             gpointer gp = g_list_nth_data( noReturn, inFunc );
             nort = *(int *) gp;
             noReturn = g_list_remove( noReturn, gp );
+            // clean lists
+            g_list_free( FuncParaList );
+            FuncBody = NULL;
             inFunc--;
             if ( nort <= 0 && lf->lexval.ival != VOID_T ) {
                 ERRNO = ErrorNoReturnInFunc;
                 errorInfo(ERRNO, node->line, "missing return in function declaration.\n");
                 return ERRNO;
             } 
+            char * initcode = allInitTmpVabCodeInScope( rt->scope[1], NULL, 1 );
             int flag0 = 0;
             int type0 = lf->lexval.ival;
             if (type0 == VERTEX_T || type0 == EDGE_T || type0 == VLIST_T ||
                     type0 == ELIST_T ||type0 == STRING_T || type0 == GRAPH_T) flag0 = 1;
-            node->code = strCatAlloc("",9,
+            node->code = strCatAlloc("",10,
                     sTypeName(lf->lexval.ival),(flag0)? " * ":" ",
                     node->symbol->bind,     // func_id
                     " ( ", sg->code," ) ", "{\n",
+                    initcode,
                     rt->code, "}\n");
+            free(initcode);
             //showASTandST(node,"Function Definition");
             break;
         }
-        case FUNC_LITERAL :             // function_literal_declaration
+        case FUNC_LITERAL :  {           // function_literal_declaration
             lf = node->child[1];            // return type
             sg = node->child[0];            // parameter_list
             rt = node->child[2];            // compound_statement
             codeGen(sg); 
             int zero = 0, nort;
             inFunc++;
+            // set para list to global
+            FuncParaList = getAllParaInFunc(sg->child[1], NULL);
+            // set body pointer to global (used in AST_RETURN)
+            FuncBody = rt;
+            // get return type and number returns
             returnList = g_list_append(returnList, (gpointer) & (lf->lexval.ival) );
             noReturn = g_list_append( noReturn, (gpointer) &zero); 
             codeGen(rt); 
@@ -1586,23 +1659,34 @@ int codeGen (struct Node * node) {
             gpointer gp = g_list_nth_data( noReturn, inFunc );
             nort = *(int *) gp;
             noReturn = g_list_remove( noReturn, gp );
+            // clean lists
+            g_list_free( FuncParaList );
+            FuncBody = NULL;
             inFunc--;
             if ( nort <= 0 && lf->lexval.ival != VOID_T ) {
                 ERRNO = ErrorNoReturnInFunc;
                 errorInfo(ERRNO, node->line, "missing return in function literal declaration.\n");
                 return ERRNO;
             }
+            char * initcode = allInitTmpVabCodeInScope( rt->scope[1], NULL, 1 );
+            int flag0 = 0;
+            int type0 = lf->lexval.ival;
+            if (type0 == VERTEX_T || type0 == EDGE_T || type0 == VLIST_T ||
+                    type0 == ELIST_T ||type0 == STRING_T || type0 == GRAPH_T) flag0 = 1;
             //    put code to node->codetmp, as we need put all func_literals in
             // the external in target code.
             node->code = NULL;
-            node->codetmp = strCatAlloc("", 10,
-                    sTypeName(lf->lexval.ival)," ",
-                    node->symbol->bind,
+            node->codetmp = strCatAlloc("", 11,
+                    sTypeName(lf->lexval.ival),(flag0)? " * " : " ",
+                    node->symbol->bind,  // func_id
                     " ( void * _obj, int _obj_type",
                     (sg->nch==1) ? "" : " , ",
                      sg->code, " ) ", "{\n",
+                    initcode,
                     rt->code, "}  // END_OF_FUNC_LITERAL\n");
+            free(initcode);
             break;
+        }
 /************************************************************************************/
         case AST_FUNC_DECLARATOR :
             // here only create parameter list

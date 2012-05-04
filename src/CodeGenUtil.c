@@ -200,6 +200,13 @@ char * tmpAttr() {
     return tmp;
 }
 
+char * tmpReturnTmp() {
+    static char tmp[128];
+    static int i = 0;
+    sprintf(tmp,"_tmp_return_%d\0", i++);
+    return tmp;
+}
+
 char * tmpMatch() {
     static char tmp[128];
     static int i = 0;
