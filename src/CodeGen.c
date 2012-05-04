@@ -29,7 +29,7 @@ int     inMATCH,                // flags to indicate : inside of match operator
         nMATCHsVab;             // count number of dynamic variables in Match
 GList *returnList, *noReturn, *FuncParaList;
 char * matchStaticVab, *frontDeclExp, *frontDeclExpTmp1;
-struct Node * FuncBody;
+struct Node * FuncBody, * LoopBody;
 
 void derivedTypeInitCode(struct Node* node, int type, int isglobal){
 	if(node->token == AST_COMMA){
@@ -1501,7 +1501,26 @@ int codeGen (struct Node * node) {
                 errorInfo(ERRNO, node->line, "call `break' outside of loop\n");   
                 return ERRNO;
             } else {
-                node->code = strCatAlloc("", 2,INDENT[node->scope[0]], "break ;\n");
+                char * freecode = NULL, * bkcode = NULL;
+                // get all scope ids from the Loopbody to self
+                int found = 0;
+                GList * allscope = getAllScopeIdInside(LoopBody, NULL, node, &found);
+                if (found == 0) {
+                    fprintf(stderr, "coding wrong for getAllScopeIdInside !!!!!\n");
+                }
+                // free code for GC
+                int tl = g_list_length ( allscope );
+                int i;
+                for ( i=0; i<tl; i++ ) {
+                    int * pi = g_list_nth_data ( allscope, i );
+                    char * tcode = allFreeCodeInScope( *pi, NULL, node->scope[0] );
+                    freecode = strRightCatAlloc( freecode, "", 1, tcode );
+                    free(tcode);
+                }
+                // break code
+                bkcode = strCatAlloc("", 2,INDENT[node->scope[0]], "break ;\n");
+                // all
+                node->code = strCatAlloc("",2 ,freecode, bkcode);
             }
             break;
         case AST_JUMP_CONTINUE :
