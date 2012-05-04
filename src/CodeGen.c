@@ -360,6 +360,36 @@ char * codeForFreeDerivedVabInScope(ScopeId sid, int type, GList * gl, ScopeId l
     return code;
 }
 
+char * codeForInitTmpVabInScope ( ScopeId sid, int type, GList * gl, ScopeId lvl, int which ){
+    GList * vals = NULL;
+    if (which == 0) vals = sTableAllVarScope( sid, type );
+    else if (which == 1) vals = tmpTableAllVarScope( sid, type );
+
+    char * code = NULL, * freefunc = codeFreeFuncName(type);
+    int i, l = g_list_length( vals );
+    SymbolTableEntry * e;
+    int isptr = ( type == VLIST_T || type == ELIST_T || type == GRAPH_T || type == VERTEX_T ||
+        type == EDGE_T || type == DYN_ATTR_T ) ? 1: 0 ;
+    char * def;
+    switch (type) {
+        case BOOL_T: def = "false"; break;
+        case INT_T: def = "0"; break;
+        case FLOAT_T: def = "0.0"; break;
+        default: def = "NULL"; break;
+    }
+    for ( i=0; i<l; ++i ){
+        e = (SymbolTableEntry *) g_list_nth_data( vals, i );
+        if( g_list_find( gl, (gpointer) e ) == NULL ) {
+            code = strRightCatAlloc( code, "", 7, INDENT[lvl], sTypeName(e->type),
+                 (isptr) ? " * ": " ", e->bind, " = ", def, ";\n");
+        }
+    }
+    g_list_free( vals );
+    return code;
+}
+
+            
+
 char * allFreeCodeInScope(ScopeId sid, GList * gl, ScopeId lvl) {
     char * sc = codeForFreeDerivedVabInScope( sid, STRING_T, gl, lvl, 0 );
     char * vc = codeForFreeDerivedVabInScope( sid, VERTEX_T, gl, lvl, 0 );
@@ -375,8 +405,22 @@ char * allFreeCodeInScope(ScopeId sid, GList * gl, ScopeId lvl) {
     char * telc = codeForFreeDerivedVabInScope( sid, ELIST_T, gl, lvl, 1 );
     char * tatt = codeForFreeDerivedVabInScope( sid, DYN_ATTR_T, gl, lvl, 1 );
 
-    return strCatAlloc("", 13, sc, vc, ec, gc, vlc, elc,
+    char * rlt = strCatAlloc("", 13, sc, vc, ec, gc, vlc, elc,
                     tsc, tvc, tec, tgc, tvlc, telc, tatt );
+    return rlt;
+}
+
+char * allInitTmpVabCodeInScope(ScopeId sid, GList * gl, ScopeId lvl) {
+    char * tvc = codeForInitTmpVabInScope( sid, VERTEX_T, gl, lvl, 1 );
+    char * tec = codeForInitTmpVabInScope( sid, EDGE_T, gl, lvl, 1 );
+    char * tgc = codeForInitTmpVabInScope( sid, GRAPH_T, gl, lvl, 1 );
+    char * tvlc = codeForInitTmpVabInScope( sid, VLIST_T, gl, lvl, 1 );
+    char * telc = codeForInitTmpVabInScope( sid, ELIST_T, gl, lvl, 1 );
+    char * tatt = codeForInitTmpVabInScope( sid, DYN_ATTR_T, gl, lvl, 1);
+    char * rlt =  strCatAlloc("", 6, 
+        tvc, tec,tgc,tvlc,telc,tatt);
+    
+    return rlt;
 }
 
 GList * getAllParaInFunc(struct Node * node, GList * gl) {
@@ -1239,10 +1283,12 @@ int codeGen (struct Node * node) {
                 sg = node->child[0];
                 codeGen(sg);
                 char * freecode = NULL;
+                char * initcode = NULL;
                 if(token == AST_COMP_STAT) {  // GC
                     freecode = allFreeCodeInScope(node->child[1]->scope[1], NULL, node->child[1]->scope[0] );
+                    initcode = allInitTmpVabCodeInScope( node->child[1]->scope[1], NULL, node->child[1]->scope[0] );
                 }
-                node->code = strCatAlloc("",5,INDENT[node->scope[0]],"{\n",node->child[0]->code,freecode,"} // END_COMP\n");
+                node->code = strCatAlloc("",6,INDENT[node->scope[0]],"{\n",initcode, node->child[0]->code,freecode,"} // END_COMP\n");
             }
             break;
         case AST_STAT_LIST :
@@ -1343,13 +1389,13 @@ int codeGen (struct Node * node) {
                 SymbolTableEntry* etmp = tmpVab( DYN_ATTR_T, node->scope[1] );
                 char * cass = tmpVabAssign( etmp, lf->code );
                 char * cdel = tmpVabDel( etmp );
-                node->code = strRightCatAlloc(node->code, "", 11,
+                node->code = strRightCatAlloc(node->code, "", 15,
                     INDENT[node->scope[0]],"// START_OF_WHILE\n",
                     INDENT[node->scope[0]],cass,
                     INDENT[node->scope[0]],"while ( ", codeGetAttrVal(etmp->bind, BOOL_T,node->line),
                     " ) {\n", rt->code, 
-                    //INDENT[node->scope[0]],cdel,
-                    //INDENT[node->scope[0]],cass,
+                    INDENT[node->scope[0]],cdel,
+                    INDENT[node->scope[0]],cass,
                     INDENT[node->scope[0]],"}//END_OF_WHILE\n");
             }
             break;
@@ -1693,6 +1739,7 @@ void codeAllGlobal(struct Node* node, char ** code) {
 char * wapperMainCode(char * mainBodyCode){
     char * head = "int main() {\n\n";
     char * GC1 = "gcInit();\n";
+    char * initcode = allInitTmpVabCodeInScope( 0, NULL, 0);
     char * freecode = allFreeCodeInScope( 0, NULL, 0 );
 #ifdef _DEBUG
     //debugInfo("MainFreeCode:\n");
@@ -1700,7 +1747,7 @@ char * wapperMainCode(char * mainBodyCode){
 #endif
     char * GC2 = "gcDel();\n";
     char * end = "\n} // END_OF_MAIN \n";
-    return strCatAlloc("",6,head,GC1, mainBodyCode, freecode, GC2, end);
+    return strCatAlloc("",6,head,GC1,initcode, mainBodyCode, freecode, GC2, end);
 }
 
 void exportCode(char * code){
