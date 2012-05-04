@@ -1405,8 +1405,11 @@ int codeGen (struct Node * node) {
 /************************************************************************************/
         case AST_WHILE :                // iteration_statement
             lf = node->child[0]; rt = node->child[1];
-            codeGen(lf); 
-            node->code = codeFrontDecl(node->scope[0] );
+            char * tmpcode;
+			frontDeclExpTmp1 = frontDeclExp; frontDeclExp = NULL;
+            codeGen(lf); tmpcode = frontDeclExp;
+			frontDeclExp = frontDeclExpTmp1; frontDeclExpTmp1 = NULL;
+			node->code = codeFrontDecl(node->scope[0] );
             inLoop++; codeGen(rt); inLoop--;
             if(lf->type>=0){
                 node->code = strRightCatAlloc(node->code, "", 7, 
@@ -1418,15 +1421,18 @@ int codeGen (struct Node * node) {
                 //char * ctmp = tmpAttr();
                 SymbolTableEntry* etmp = tmpVab( DYN_ATTR_T, node->scope[1] );
                 char * cass = tmpVabAssign( etmp, lf->code );
-                char * cdel = tmpVabDel( etmp );
-                node->code = strRightCatAlloc(node->code, "", 15,
+                //char * cdel = tmpVabDel( etmp );
+                node->code = strRightCatAlloc(node->code, "", 17,
+					INDENT[node->scope[0]], tmpcode,
                     INDENT[node->scope[0]],"// START_OF_WHILE\n",
                     INDENT[node->scope[0]],cass,
                     INDENT[node->scope[0]],"while ( ", codeGetAttrVal(etmp->bind, BOOL_T,node->line),
                     " ) {\n", rt->code, 
-                    INDENT[node->scope[0]],cdel,
+				   	INDENT[node->scope[0]],tmpcode,
                     INDENT[node->scope[0]],cass,
                     INDENT[node->scope[0]],"}//END_OF_WHILE\n");
+				free(cass); cass = NULL;
+				free(tmpcode);tmpcode = NULL;
             }
             break;
         case AST_FOR : {
@@ -1434,7 +1440,12 @@ int codeGen (struct Node * node) {
                         *f2 = node->child[1],
                         *f3 = node->child[2],
                         *fs = node->child[3];
-            codeGen(f1);codeGen(f2);codeGen(f3);
+			char * cf1 = NULL, *cf2 = NULL, *cf3 = NULL;
+			frontDeclExpTmp1 = frontDeclExp; frontDeclExp = NULL;
+            codeGen(f1); cf1 = frontDeclExp; frontDeclExp = NULL;
+			codeGen(f2); cf2 = frontDeclExp; frontDeclExp = NULL;
+			codeGen(f3); cf3 = frontDeclExp; frontDeclExp = NULL;
+			frontDeclExp = frontDeclExpTmp1; frontDeclExpTmp1 = NULL;
             node->code = codeFrontDecl(node->scope[0] );
             inLoop++; codeGen(fs); inLoop--;
             if (f1->type>=0 && f2->type>=0 && f3->type>=0){
@@ -1446,19 +1457,24 @@ int codeGen (struct Node * node) {
             }
             else {  // DYNAMIC :: translate for to while
                 //char * ctmp = tmpAttr();
-                /*
-                node->code = strRightCatAlloc(node->code,"", 33,
+                SymbolTableEntry* etmp = tmpVab( DYN_ATTR_T, node->scope[1] );
+				char * cass = tmpVabAssign(etmp, f2->code);
+                node->code = strRightCatAlloc(node->code,"", 25,
+					INDENT[node->scope[0]], cf1, "\n", cf2, "\n",
                     INDENT[node->scope[0]],"// START_OF_FOR\n",
-                    INDENT[node->scope[0]],f1->code,";\n",
-                    INDENT[node->scope[0]],"Attribute* ", ctmp, " = ", f2->code, " ;\n", 
-                    INDENT[node->scope[0]],"while (", codeGetAttrVal(ctmp, BOOL_T,node->line),
+                    INDENT[node->scope[0]], cass,
+                    INDENT[node->scope[0]],"while (", codeGetAttrVal(etmp->bind, BOOL_T,node->line),
                     " ) {\n", fs->code,
-                    INDENT[node->scope[0]],f3->code,";\n",
-                    INDENT[node->scope[0]],"destroy_attr( ", ctmp, " );\n",
-                    INDENT[node->scope[0]],ctmp, " = ", f2->code, " ;\n",
+                    INDENT[node->scope[0]], cf3, "\n",
+                    INDENT[node->scope[0]], cf2, "\n",
+                    INDENT[node->scope[0]], cass, ";\n",
                     "} \n",
-                    INDENT[node->scope[0]],"destroy_attr( ", ctmp, " ); // END_OF_FOR\n"
-                );*/
+					"//END_OF_FOR\n"
+                );
+				free(cf1);cf1=NULL;
+				free(cf2);cf2=NULL;
+				free(cf3);cf3=NULL;
+				free(cass);cass=NULL;
             }
             break;
         }
@@ -1467,21 +1483,28 @@ int codeGen (struct Node * node) {
             // break or continue is forbidden 
 			codeGen(lf); codeGen(sg); codeGen(rt);
 			int ltype = lf->child[1]->type, rtype = sg->type;
-			if( ltype==VERTEX_T&&rtype==VLIST_T || ltype==EDGE_T&&rtype==ELIST_T ){/*
+			if( ltype==VERTEX_T&&rtype==VLIST_T || ltype==EDGE_T&&rtype==ELIST_T ){
 				char* ti = lf->child[1]->symbol->bind;
-				char* tlen = strCatAlloc("", 1, tmpVab());
-				char* tc = strCatAlloc("", 1, tmpVab());
+				char* tlen = strCatAlloc("", 1, tmpVab(INT_T, node->scope[1]));
+				char* tc = strCatAlloc("", 1, tmpVab(INT_T, node->scope[1]));
             	node->code = codeFrontDecl(node->scope[0] );
-				node->code = strRightCatAlloc(node->code, "" , 35,
-					INDENT[node->scope[0]], sTypeName(ltype), " * ", ti, ";\n",
+				node->code = strRightCatAlloc(node->code, "" , 25,
+					INDENT[node->scope[0]], sTypeName(ltype), " * ", ti, " = NULL;\n",
 					INDENT[node->scope[0]], "int ", tlen, " = g_list_length(", sg->code, "->list);\n",
 					INDENT[node->scope[0]], "int ", tc, ";\n",
-					INDENT[node->scope[0]], "for (", tc, "=0; ", tc, "<", tlen, "; ", tc, "++) {\n",
-					INDENT[node->scope[0]], ti, " = g_list_nth_data ( ", sg->code, "->list, ", tc, " );\n",
-					rt->code,
-				    INDENT[node->scope[0]], "} //END_OF_FOREACH\n");
+					INDENT[node->scope[0]], "for (", tc, "=0; ", tc, "<", tlen, "; ", tc, "++) {\n");
+				if(ltype == VERTEX_T)
+					node->code = strRightCatAlloc(node->code, "", 8,
+						INDENT[node->scope[0]], "assign_operator_vertex(&", ti, ", g_list_nth_data ( ", sg->code, "->list, ", tc, " ) );\n");
+				else
+					node->code = strRightCatAlloc(node->code, "", 8,
+						INDENT[node->scope[0]], "assign_operator_edge(&", ti, ", g_list_nth_data ( ", sg->code, "->list, ", tc, " ) );\n");
+				node->code = strRightCatAlloc(node->code, "", 3, 
+						//INDENT[node->scope[0]], ti, " = g_list_nth_data ( ", sg->code, "->list, ", tc, " );\n",
+						rt->code,
+				    	INDENT[node->scope[0]], "} //END_OF_FOREACH\n");
 				free(tlen);free(tc);
-				if(sg->tmp[0]==REMOVE_DYN) {
+				/*if(sg->tmp[0]==REMOVE_DYN) {
 					node->code = strRightCatAlloc(node->code,"", 5,
 						INDENT[node->scope[0]], codeFreeFuncName(VLIST_T), " ( ", sg->code, " );\n");
 				}*/
