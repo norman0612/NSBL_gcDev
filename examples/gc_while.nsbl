@@ -1,0 +1,9 @@
+vertex v0,v1,v2,v3;
+v0.b = true;
+v0.i = 2;
+int j = 0;
+while(v0.i > j){
+	print <<"in if 1\n";
+	j=j+1;
+}
+

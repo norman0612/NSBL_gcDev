@@ -1,0 +1,38 @@
+vertex v0,v1,v2,v3,v4,v5;
+v1.name = "a";
+v2.name = "b";
+v3.name = "c";
+v4.name = "d";
+v5.name = "e";
+
+v1.age = 10;
+v2.age = 11;
+v3.age = 12;
+v4.age = 13;
+v5.age = 14;
+
+v1.w = 100.1;
+v2.w = 200.1;
+v3.w = 300.1;
+v4.w = 400.1;
+v5.w = 500.1;
+
+v1.m = true;
+v2.m = false;
+v3.m = true;
+v4.m = true;
+v5.m = false;
+
+edge e0,e1,e2,e3,e4,e5;
+
+e1:v1->v2;
+e2:v3->v2;
+e3:v4->v2;
+e4:v2->v3;
+e5:v5->v2;
+
+graph g;
+g <: v1,v2,v3,v4,v5;
+
+string file = "g.xml";
+file << g;

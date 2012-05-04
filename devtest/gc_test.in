@@ -1,0 +1,19 @@
+vertex vg1,vg2;
+
+vg1.a = false;
+vg1.b = true;
+vg1.i = 2;
+vg1.j = 10;
+{
+    vertex v11,v12;
+    v11.name = "J";
+}
+
+if ( vg1.b && !vg1.a || vg1.a) {
+    vg1.k = (float) vg1.j/ (float) vg1.i - vg1.i * -vg1.j;
+    print << " k  = 10./2. - 2*-10 =" << vg1.k << "\n";
+
+}
+
+
+

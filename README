@@ -1,0 +1,104 @@
+/********************
+ * How to compile?  *
+ ********************/
+> cd src
+> make
+> make test
+
+/**IMPORTANT*/
+YACC : version 2.4.1 work (1.9 buggy!!!)
+
+/*******
+ * LOG *
+ *******/
+04/02/2012
+ADD symbol table : SymbolTable.c SymbolTable.h testST.c
+ADD abstract syntax tree : ASTree.c ASTree.h
+
+STATUS: 
+>>AST is working, EXCEPT for function, function literal, statements
+
+04/04/2012
+util.c :                wrapper for log Output
+SymbolTableUtil.c:      declaration check related
+Error.h :               define compilation errors
+global.h :              declaration of all global variables
+ASTree.h :              call wapper
+SymbolTable.h :         call wapper
+LexAly.l :              add line number
+
+STATUS:
+>>AST should work;
+>>declaration check partially work;
+>>Type check needed;
+>>assign #line to Leaf: ok
+>>assign #line in Node: NOT done
+
+04/05/2012
+STATUS:
+>>AST completely works now
+>>variable declaration DONE
+>>function declaration DONE 
+>>#line completely works
+>>scope completely works
+>>Symbol Table works for variable, function, BUT func_literal
+>>Type check: partial 
+
+>>testST.c  broken as Interface changed!!!
+
+DESIGN:
+>>function should pass by reference
+
+04/07/2012
+STATUS:
+>>Code Gen works for static types, operations, func, func_literal.
+>>static type checking works
+>>symbol table completely works
+
+TODO:
+>>graph library
+>>glue interface
+>>i/o
+
+Bugs:
+04/02/2012 LexAly.l : for strliteral, should remove ""     // cleared -Jing
+
+04/12/2012
+STATUS:
+>>graph library added, not tested yet, just give you an idea of what I am doing now.
+
+04/14/2012
+STATUS:
+Me and Chantal working on I/O part. savegraph is complete but not tested. working on read graph as well. (Kunal)
+
+04/20/2012
+ADD error handle for syntax error.
+BASIC Error HANDLE complete. 
+-Jing
+
+4/21/2012
+XML Read Write and print statements DONE (Kunal)
+Code Gen and grammar update for the same remains
+
+4/24/2012
+Dynamic type checking
+delete of object, attribute
+Match op
+Func_literal support dynamic type
+return type checking
+
+4/25/2012
+Dynamic type checking for attribute operators
+Graph lib changed for match and pipe
+codegen for append operations
+
+4/26/2012
+Makefile: 
+
+5/1/2012
+length(list)
+vlist l = lv|...?[...]
+missing {} in if-stmt
+
+5/2/2012
+File Read Write working and tested with devtest/io.nsbl (kunal) 

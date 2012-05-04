@@ -1,0 +1,52 @@
+vertex v1,v2;
+v1.name = "a";
+v2.name = "b";
+
+v1.age = 10;
+v2.age = 11;
+
+v1.w = 100.1;
+v2.w = 200.1;
+
+v1.m = true;
+v2.m = false;
+
+edge e1;
+
+e1:v1->v2;
+
+vlist vl = [v1,v2];
+vlist l1=[],l2,l3=[];
+elist le1,le2;
+vlist vp = [v2];
+
+print << e1;
+vertex vv =  vl[0];
+
+le1 = vp|inE;
+print <<"1 pipe for edges"<<le1;
+
+l1 = le1|strtV;
+print <<"2 pipe for vertex"<<l1;
+
+
+print <<"init\n"<<vl;
+print <<v1<<v2<<v3<<v4<<v5;
+
+l2 = vl?[@age>13 || !@m];
+print<<"===================\n" << l2;
+
+//foreach(vertex vt : vp|inE|strtV?[@age>13 || !@m]) print << vt;
+
+// list member
+//int i;
+//for (i=0; i<length(vl); i=i+1)
+//    if (i==1) print << "list Member :\n" << vl[i];
+
+//vertex tmp;
+//tmp.i = 0;
+//print << "list Member :\n" << vl[tmp.i+4];
+
+
+//del v0, v1, v2, v3, v4, v5;
+//del vl, l1, l2, l3;

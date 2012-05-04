@@ -1,0 +1,7 @@
+vertex v0,v1,v2,v3;
+v0.b = true;
+
+if(v0.b){
+	print <<"in if 1\n";
+}
+
