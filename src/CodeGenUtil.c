@@ -200,6 +200,13 @@ char * tmpAttr() {
     return tmp;
 }
 
+char * gotolabel() {
+    static char tmp[128];
+    static int i = 0;
+    sprintf(tmp,"label_%d\0", i++);
+    return tmp;
+}
+
 char * tmpReturnTmp() {
     static char tmp[128];
     static int i = 0;

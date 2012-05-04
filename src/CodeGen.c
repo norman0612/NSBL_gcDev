@@ -29,6 +29,7 @@ int     inMATCH,                // flags to indicate : inside of match operator
         nMATCHsVab;             // count number of dynamic variables in Match
 GList *returnList, *noReturn, *FuncParaList;
 char * matchStaticVab, *frontDeclExp, *frontDeclExpTmp1;
+char * LoopGotoLabel;
 struct Node * FuncBody, * LoopBody;
 
 void derivedTypeInitCode(struct Node* node, int type, int isglobal){
@@ -1403,18 +1404,25 @@ int codeGen (struct Node * node) {
             }
             break;
 /************************************************************************************/
-        case AST_WHILE :                // iteration_statement
+        case AST_WHILE : {               // iteration_statement
             lf = node->child[0]; rt = node->child[1];
             char * tmpcode;
+            char * label = strCatAlloc("",1,gotolabel());
 			frontDeclExpTmp1 = frontDeclExp; frontDeclExp = NULL;
             codeGen(lf); tmpcode = frontDeclExp;
 			frontDeclExp = frontDeclExpTmp1; frontDeclExpTmp1 = NULL;
 			node->code = codeFrontDecl(node->scope[0] );
-            inLoop++; codeGen(rt); inLoop--;
+            inLoop++;
+            LoopBody = rt->child[0]; LoopGotoLabel = label;
+            codeGen(rt); 
+            LoopBody = NULL; LoopGotoLabel = NULL;
+            inLoop--;
+
             if(lf->type>=0){
-                node->code = strRightCatAlloc(node->code, "", 7, 
+                node->code = strRightCatAlloc(node->code, "", 10, 
                     INDENT[node->scope[0]],"while ( ", lf->code, " ) {\n",
                     rt->code, INDENT[node->scope[0]], 
+                    label,": {} ", INDENT[node->scope[0]],
                     "} //END_OF_WHILE\n");
             }
             else { // DYNAMIC
@@ -1422,53 +1430,63 @@ int codeGen (struct Node * node) {
                 SymbolTableEntry* etmp = tmpVab( DYN_ATTR_T, node->scope[1] );
                 char * cass = tmpVabAssign( etmp, lf->code );
                 //char * cdel = tmpVabDel( etmp );
-                node->code = strRightCatAlloc(node->code, "", 17,
+                node->code = strRightCatAlloc(node->code, "", 20,
 					INDENT[node->scope[0]], tmpcode,
                     INDENT[node->scope[0]],"// START_OF_WHILE\n",
                     INDENT[node->scope[0]],cass,
                     INDENT[node->scope[0]],"while ( ", codeGetAttrVal(etmp->bind, BOOL_T,node->line),
                     " ) {\n", rt->code, 
+                    INDENT[node->scope[0]],label,": {\n",
 				   	INDENT[node->scope[0]],tmpcode,
                     INDENT[node->scope[0]],cass,
-                    INDENT[node->scope[0]],"}//END_OF_WHILE\n");
+                    INDENT[node->scope[0]],"}\n}//END_OF_WHILE\n");
+                free(label); label = NULL;
 				free(cass); cass = NULL;
-				free(tmpcode);tmpcode = NULL;
             }
+		    free(tmpcode);tmpcode = NULL;
+            free(label);label = NULL;
             break;
+        }
         case AST_FOR : {
             struct Node *f1 = node->child[0],
                         *f2 = node->child[1],
                         *f3 = node->child[2],
                         *fs = node->child[3];
 			char * cf1 = NULL, *cf2 = NULL, *cf3 = NULL;
+            char * label = strCatAlloc("",1,gotolabel());
 			frontDeclExpTmp1 = frontDeclExp; frontDeclExp = NULL;
             codeGen(f1); cf1 = frontDeclExp; frontDeclExp = NULL;
 			codeGen(f2); cf2 = frontDeclExp; frontDeclExp = NULL;
 			codeGen(f3); cf3 = frontDeclExp; frontDeclExp = NULL;
 			frontDeclExp = frontDeclExpTmp1; frontDeclExpTmp1 = NULL;
             node->code = codeFrontDecl(node->scope[0] );
-            inLoop++; codeGen(fs); inLoop--;
+            inLoop++; LoopBody = fs->child[0]; LoopGotoLabel = label;
+            codeGen(fs); 
+            LoopBody = NULL; inLoop--; LoopGotoLabel = NULL;
             if (f1->type>=0 && f2->type>=0 && f3->type>=0){
-                node->code = strRightCatAlloc(node->code, "",10, INDENT[node->scope[0]],
+                node->code = strRightCatAlloc(node->code, "",13, INDENT[node->scope[0]],
                     "for (", (f1!=NULL)? f1->code : "", ";", 
                              (f2!=NULL)? f2->code : "", ";", 
                              (f3!=NULL)? f3->code : "", ") {\n",
-                             fs->code, "} //END_OF_FOR\n");
+                             fs->code, 
+                            INDENT[node->scope[0]],label,":{}\n",
+                            "} //END_OF_FOR\n");
             }
             else {  // DYNAMIC :: translate for to while
                 //char * ctmp = tmpAttr();
                 SymbolTableEntry* etmp = tmpVab( DYN_ATTR_T, node->scope[1] );
 				char * cass = tmpVabAssign(etmp, f2->code);
-                node->code = strRightCatAlloc(node->code,"", 25,
+                node->code = strRightCatAlloc(node->code,"", 28,
 					INDENT[node->scope[0]], cf1, "\n", cf2, "\n",
                     INDENT[node->scope[0]],"// START_OF_FOR\n",
                     INDENT[node->scope[0]], cass,
                     INDENT[node->scope[0]],"while (", codeGetAttrVal(etmp->bind, BOOL_T,node->line),
                     " ) {\n", fs->code,
+                    INDENT[node->scope[0]], label,": {\n",
                     INDENT[node->scope[0]], cf3, "\n",
                     INDENT[node->scope[0]], cf2, "\n",
                     INDENT[node->scope[0]], cass, ";\n",
-                    "} \n",
+                    "}\n} \n",
 					"//END_OF_FOR\n"
                 );
 				free(cf1);cf1=NULL;
@@ -1476,6 +1494,7 @@ int codeGen (struct Node * node) {
 				free(cf3);cf3=NULL;
 				free(cass);cass=NULL;
             }
+            free(label);
             break;
         }
         case AST_FOREACH :{
@@ -1540,21 +1559,46 @@ int codeGen (struct Node * node) {
                     freecode = strRightCatAlloc( freecode, "", 1, tcode );
                     free(tcode);
                 }
+                g_list_free( allscope );
                 // break code
                 bkcode = strCatAlloc("", 2,INDENT[node->scope[0]], "break ;\n");
                 // all
                 node->code = strCatAlloc("",2 ,freecode, bkcode);
+                free(freecode);
+                free(bkcode);
             }
             break;
-        case AST_JUMP_CONTINUE :
+        case AST_JUMP_CONTINUE : {
             if(inLoop==0) {
                 ERRNO = ErrorCallContinueOutsideOfLoop;
                 errorInfo(ERRNO, node->line, "call `continue' outside of loop\n");
                 return ERRNO;
             } else {
-                node->code = strCatAlloc("", 2,INDENT[node->scope[0]], "continue ;\n");
+                char * freecode = NULL, * ctcode = NULL;
+                // get all scope ids from the Loopbody to self
+                int found = 0;
+                GList * allscope = getAllScopeIdInside(LoopBody, NULL, node, &found);
+                if (found == 0) {
+                    fprintf(stderr, "coding wrong for getAllScopeIdInside !!!!!\n");
+                }
+                // free code for GC
+                int tl = g_list_length ( allscope );
+                int i;
+                for ( i=0; i<tl; i++ ) {
+                    int * pi = g_list_nth_data ( allscope, i );
+                    char * tcode = allFreeCodeInScope( *pi, NULL, node->scope[0] );
+                    freecode = strRightCatAlloc( freecode, "", 1, tcode );
+                    free(tcode);
+                }
+                g_list_free( allscope );
+                // continue code
+                ctcode = strCatAlloc("", 4 , INDENT[node->scope[0]], "goto ", LoopGotoLabel,";\n");
+                node->code = strCatAlloc("", 2,freecode, ctcode);
+                free(ctcode);
+                free(freecode);
             }
             break;
+        }
         case AST_JUMP_RETURN : { 
             if(inFunc<0) {
                 ERRNO = ErrorCallReturnOutsideOfFunc;
@@ -1615,6 +1659,7 @@ int codeGen (struct Node * node) {
                     freecode = strRightCatAlloc( freecode, "", 1, tcode );
                     free(tcode);
                 }
+                g_list_free( allscope );
                 node->code = strRightCatAlloc( node->code, "", 2, freecode, rtcode ); 
             }
             break;
