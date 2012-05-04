@@ -235,8 +235,8 @@ int codeAttr ( struct Node * node ) {
         return 1;
     }
     SymbolTableEntry* e = tmpVab( DYN_ATTR_T, node->scope[1] );
-    frontDeclExp = strRightCatAlloc( frontDeclExp, "",10 ,
-        INDENT[node->scope[0]],"Attribute * ", e->bind, " = NULL; assign_operator_attr( &( ",
+    frontDeclExp = strRightCatAlloc( frontDeclExp, "",8 ,
+        INDENT[node->scope[0]], "assign_operator_attr( &( ",
             e->bind, " ), new_attr_", typeMacro(node->type),
         "( ", code," ) );\n"); 
     node->code = strCatAlloc("", 1, e->bind);
@@ -755,8 +755,8 @@ int codeGen (struct Node * node) {
                 }
                 if(!flag) {
                     SymbolTableEntry* e = tmpVab( DYN_ATTR_T, node->scope[1] );
-                    frontDeclExp = strRightCatAlloc( frontDeclExp, "", 19,
-                        INDENT[node->scope[0]],"Attribute * ",e->bind," = NULL;",
+                    frontDeclExp = strRightCatAlloc( frontDeclExp, "", 16,
+                        INDENT[node->scope[0]],
                         "assign_operator_attr ( &( ", e->bind, " ) , ",
                         " binary_operator ( ", lf->code, " , ", rt->code, " , ", DynOP(token),
                         ", FLAG_NO_REVERSE",
@@ -803,8 +803,8 @@ int codeGen (struct Node * node) {
                 if(rt->type >= 0) flag = codeAttr(rt);
                 if(!flag) {
                     SymbolTableEntry* e = tmpVab( DYN_ATTR_T, node->scope[1] );
-                    frontDeclExp = strRightCatAlloc( frontDeclExp, "", 18,
-                    INDENT[node->scope[0]],"Attribute * ",e->bind," = NULL; ",
+                    frontDeclExp = strRightCatAlloc( frontDeclExp, "", 15,
+                    INDENT[node->scope[0]],
                     "assign_operator_attr( &( ", e->bind,
                     ") , binary_operator ( ", lf->code, " , ", rt->code, " , ", DynOP(token),
                     ", FLAG_NO_REVERSE",
@@ -844,8 +844,8 @@ int codeGen (struct Node * node) {
                 if(rt->type >= 0) flag = codeAttr(rt);
                 if(!flag) {
                     SymbolTableEntry* e = tmpVab( DYN_ATTR_T, node->scope[1] );
-                    frontDeclExp = strRightCatAlloc( frontDeclExp, "", 18,
-                    INDENT[node->scope[0]],"Attribute * ",e->bind," = NULL; ",
+                    frontDeclExp = strRightCatAlloc( frontDeclExp, "", 15,
+                    INDENT[node->scope[0]],
                     "assign_operator_attr( &( ", e->bind,
                     " ) , binary_operator ( ", lf->code, " , ", rt->code, " , ", DynOP(token),
                     ", FLAG_NO_REVERSE",
@@ -894,8 +894,8 @@ int codeGen (struct Node * node) {
                 if(rt->type>=0) flag = codeAttr(rt);
                 if (!flag) {
                     SymbolTableEntry* e = tmpVab( DYN_ATTR_T, node->scope[1] );
-                    frontDeclExp = strRightCatAlloc( frontDeclExp, "", 18,
-                        INDENT[node->scope[0]],"Attribute * ",e->bind," = NULL; ",
+                    frontDeclExp = strRightCatAlloc( frontDeclExp, "", 15,
+                        INDENT[node->scope[0]],
                         "assign_operator_attr( &( ", e->bind,
                         " ) , binary_operator( ", lf->code, " , ", rt->code, " , ", DynOP(token), 
                         ", FLAG_NO_REVERSE",
@@ -937,8 +937,8 @@ int codeGen (struct Node * node) {
             }
             else {  // DYNAMIC
                 SymbolTableEntry* e = tmpVab( DYN_ATTR_T, node->scope[1] );
-                frontDeclExp = strRightCatAlloc( frontDeclExp, "",14 ,
-                    INDENT[node->scope[0]],"Attribute * ",e->bind," = NULL; ",
+                frontDeclExp = strRightCatAlloc( frontDeclExp, "",11 ,
+                    INDENT[node->scope[0]],
                     "assign_operator_attr( &( ", e->bind,
                     " ) , cast_operator( ", rt->code, " , ", typeMacro(castType),
                     (rt->tmp[0]==REMOVE_DYN) ? " , FLAG_DESTROY_ATTR" : " , FLAG_KEEP_ATTR",
@@ -973,8 +973,8 @@ int codeGen (struct Node * node) {
             }
             else { // DYNAMIC
                 SymbolTableEntry* e = tmpVab( DYN_ATTR_T, node->scope[1] );
-                frontDeclExp = strRightCatAlloc( frontDeclExp, "",14,
-                    INDENT[node->scope[0]],"Attribute * ",e->bind," = NULL; ",
+                frontDeclExp = strRightCatAlloc( frontDeclExp, "",11,
+                    INDENT[node->scope[0]],
                     "assign_operator_attr( &( ", e->bind,
                     " ) , unary_operator (", sg->code, " , ", DynOP(token),
                     (sg->tmp[0]==REMOVE_DYN) ? " , FLAG_DESTROY_ATTR" : " , FLAG_KEEP_ATTR",
@@ -1137,20 +1137,22 @@ int codeGen (struct Node * node) {
             // first generate struct and func for this match 
             char* func_body = codeFrontDecl( 1 );                           // get func body
             char* freecode = allFreeCodeInScope( sg->scope[1], NULL, 1 );
+            char* initcode = allInitTmpVabCodeInScope( sg->scope[1], NULL, 1 );
             SymbolTableEntry* ert = tmpVab( BOOL_T, sg->scope[1] );
-            node->codetmp = strCatAlloc("", 23,
+            node->codetmp = strCatAlloc("", 24,
                 "struct ",match_str, " {\n",
                 matchStaticVab,
                 "};\n",
                 "bool ", tmpfunc, 
                 " ( void * _obj, int _obj_type, struct ", match_str, " * _str ) {\n",
+                initcode,
                 func_body,
                 INDENT[1], "bool ", ert->bind, " = ", rt->code, ";\n",
                 freecode,
                 INDENT[1], "return ", ert->bind, ";\n",
                 "} // END_MATCH_FUNC \n"
             );
-            free(func_body); free(freecode);
+            free(func_body); free(freecode);free(initcode);
             free(matchStaticVab); matchStaticVab =NULL;                     // clear str decl body
             frontDeclExp = frontDeclExpTmp1;                                // restore front code before match
             // 
@@ -1163,14 +1165,13 @@ int codeGen (struct Node * node) {
             char * cass = tmpVabAssign( elt, " new_list ()" );
             char * ident = INDENT[node->scope[0]];
             char * cdel = tmpVabDel( eobj );
-            frontDeclExp = strRightCatAlloc(frontDeclExp,"", 74,
+            frontDeclExp = strRightCatAlloc(frontDeclExp,"", 69,
                 ident,"// START_MATCH\n",
                 ident,cass,
                 ident,elt->bind, "->type = (", lf->code, ")->type;\n",
                 ident,"int ", elen->bind, " = g_list_length( (", lf->code, ")->list );\n",
                 ident,"int ", ei->bind, ";\n",
                 ident,"bool ", eb->bind, ";\n",
-                ident,sTypeName(ttype)," * ", eobj->bind, " = NULL;\n",
                 ident,"for (", ei->bind, "=0; ", ei->bind, "<", elen->bind, "; ", ei->bind, "++) {\n",
                 ident,assignFunc(ttype)," ( &( ", eobj->bind, " ), list_getelement ( ",
                 lf->code, " , ", ei->bind, ") );\n",
@@ -1747,7 +1748,7 @@ char * wapperMainCode(char * mainBodyCode){
 #endif
     char * GC2 = "gcDel();\n";
     char * end = "\n} // END_OF_MAIN \n";
-    return strCatAlloc("",6,head,GC1,initcode, mainBodyCode, freecode, GC2, end);
+    return strCatAlloc("",7,head,GC1,initcode, mainBodyCode, freecode, GC2, end);
 }
 
 void exportCode(char * code){
