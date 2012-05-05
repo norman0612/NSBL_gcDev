@@ -78,6 +78,7 @@ void                    s_show_entry        (gpointer key, gpointer entry, gpoin
 void                    s_show_typeCon      (GArray* tc, FILE* out);
 int                     s_new_key           (Lexeme lex, ScopeId scope2, SymbolTableKey key);
 int                     s_new_bind          (SymbolTableEntry* entry, Binding bind);
+int                     s_entry_copy ( SymbolTableEntry * dest, SymbolTableEntry * source );
 
 int                     tmp_new_key         (Lexeme lex, ScopeId scope2, SymbolTableKey key);
 int                     tmp_new_bind        (SymbolTableEntry* entry, Binding bind);
@@ -128,5 +129,5 @@ SymbolTableEntry*       tmp_new_var_entry   (Lexeme lex, int type, ScopeId sid);
 #define tmpTableAllVarScope(s,t)   s_table_all_variables_in_scope( tmp_table, s, t )
 #define tmpNewVarEty(l,t,s)  tmp_new_var_entry(l,t,s)
 
-
+#define sEntryCopy(d,s)       s_entry_copy(d,s)
 #endif

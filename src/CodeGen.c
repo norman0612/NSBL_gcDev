@@ -40,10 +40,10 @@ void derivedTypeInitCode(struct Node* node, int type, int isglobal){
         if(node->scope[0]==0) node->codetmp = strCatAlloc("",3,node->child[0]->codetmp,",",node->child[1]->codetmp);
 	}else if (node->token == IDENTIFIER) {
         codeGen(node);
-        if(isglobal)
+        //if(isglobal)
             node->code = strCatAlloc("",3 ,INDENT[node->scope[0]],node->symbol->bind," = NULL; ");
-        else
-            node->code = strCatAlloc("",5 ,INDENT[node->scope[0]],sTypeName(type), " * ",node->symbol->bind," = NULL; ");
+        //else
+        //    node->code = strCatAlloc("",5 ,INDENT[node->scope[0]],sTypeName(type), " * ",node->symbol->bind," = NULL; ");
         
 		switch(type){
 			case GRAPH_T:
@@ -70,10 +70,10 @@ void derivedTypeInitCode(struct Node* node, int type, int isglobal){
             node->code = NULL;
             return;
         }
-        if(isglobal)
+        //if(isglobal)
             node->code = strCatAlloc("",3 ,INDENT[node->scope[0]],node->child[0]->symbol->bind," = NULL; ");
-        else
-            node->code = strCatAlloc("",5 ,INDENT[node->scope[0]],sTypeName(type), " * ",node->child[0]->symbol->bind," = NULL; ");
+        //else
+        //    node->code = strCatAlloc("",5 ,INDENT[node->scope[0]],sTypeName(type), " * ",node->child[0]->symbol->bind," = NULL; ");
         switch(type) {
             case GRAPH_T:
                 node->code = strRightCatAlloc(node->code,"",5 ,"assign_operator_graph ( &( ",
@@ -106,19 +106,19 @@ void stringInitCode(struct Node* node, int type, int isglobal){
         if(node->scope[0]==0) node->codetmp = strCatAlloc("",3,node->child[0]->codetmp,",",node->child[1]->codetmp);
 	}else if(node->token == AST_ASSIGN){
         codeGen(node->child[0]); codeGen(node->child[1]);
-		if(isglobal)
+		//if(isglobal)
 			node->code = strCatAlloc("",5,INDENT[node->scope[0]], 
                 node->child[0]->symbol->bind, " = ", node->child[1]->code, ";\n"); 
-		else
-			node->code = strCatAlloc("",7,INDENT[node->scope[0]], 
-                sTypeName(type), " * ", node->child[0]->symbol->bind, " = ", node->child[1]->code, ";\n");	
+		//else
+		//	node->code = strCatAlloc("",7,INDENT[node->scope[0]], 
+        //        sTypeName(type), " * ", node->child[0]->symbol->bind, " = ", node->child[1]->code, ";\n");	
         if(node->scope[0]==0) node->codetmp = strCatAlloc("",1,node->child[0]->codetmp);
 	}else{
         codeGen(node);
-		if(isglobal)
+		//if(isglobal)
 			node->code = strCatAlloc("",3,INDENT[node->scope[0]], node->symbol->bind, " = g_string_new(\"\");\n"); 
-		else
-			node->code = strCatAlloc("",5,INDENT[node->scope[0]], sTypeName(type), " * ", node->symbol->bind, " = g_string_new(\"\");\n");
+		//else
+		//	node->code = strCatAlloc("",5,INDENT[node->scope[0]], sTypeName(type), " * ", node->symbol->bind, " = g_string_new(\"\");\n");
 	}
 }
 
@@ -137,7 +137,8 @@ void listInitCode(struct Node* node, int type, int isglobal){
         int nArgs = (flag > 0)? flag : 0;
         sprintf(num,"%d\0", nArgs);
         node->code = strCatAlloc("", 9, INDENT[node->scope[0]],
-            (isglobal)? "" : "ListType * ", node->child[0]->symbol->bind, 
+//            (isglobal)? "" : "ListType * "
+               "", node->child[0]->symbol->bind, 
                 " = NULL; assign_operator_list ( &( ", node->child[0]->symbol->bind,
                 ") , list_declaration( ", typeMacro(mtype), " , ", num);
         if(nArgs>0) node->code = strRightCatAlloc( node->code, "",3, " , ", node->child[1]->code, ") );\n");
@@ -156,7 +157,8 @@ void listInitCode(struct Node* node, int type, int isglobal){
     else { // empty list
         codeGen(node);
         node->code = strCatAlloc("", 8, INDENT[node->scope[0]],
-            (isglobal)? "" : "ListType * ", node->symbol->bind,
+//            (isglobal)? "" : "ListType * ", 
+            "",node->symbol->bind,
                 " = NULL; assign_operator_list ( &( ", node->symbol->bind, " ) , list_declaration( ", typeMacro(mtype), " , 0 ) );\n");    
     }        
 }
@@ -416,15 +418,26 @@ char * allFreeCodeInScope(ScopeId sid, GList * gl, ScopeId lvl) {
 }
 
 char * allInitTmpVabCodeInScope(ScopeId sid, GList * gl, ScopeId lvl) {
+    char * sc = codeForInitTmpVabInScope( sid, STRING_T, gl, lvl, 0 );
+    char * vc = codeForInitTmpVabInScope( sid, VERTEX_T, gl, lvl, 0 );
+    char * ec = codeForInitTmpVabInScope(  sid, EDGE_T, gl, lvl, 0 );
+    char * gc = codeForInitTmpVabInScope( sid, GRAPH_T, gl, lvl, 0 );
+    char * vlc = codeForInitTmpVabInScope( sid, VLIST_T, gl, lvl, 0 );
+    char * elc = codeForInitTmpVabInScope( sid, ELIST_T, gl, lvl, 0 );
+
+    char * tsc = codeForInitTmpVabInScope( sid, STRING_T, gl, lvl, 1 );
     char * tvc = codeForInitTmpVabInScope( sid, VERTEX_T, gl, lvl, 1 );
     char * tec = codeForInitTmpVabInScope( sid, EDGE_T, gl, lvl, 1 );
     char * tgc = codeForInitTmpVabInScope( sid, GRAPH_T, gl, lvl, 1 );
     char * tvlc = codeForInitTmpVabInScope( sid, VLIST_T, gl, lvl, 1 );
     char * telc = codeForInitTmpVabInScope( sid, ELIST_T, gl, lvl, 1 );
     char * tatt = codeForInitTmpVabInScope( sid, DYN_ATTR_T, gl, lvl, 1);
-    char * rlt =  strCatAlloc("", 6, tvc, tec,tgc,tvlc,telc,tatt);
-    
-    free(tvc);free(tec);free(tgc);free(tvlc);free(telc);free(tatt);
+
+    char * rlt =  strCatAlloc("", 13, sc, vc, ec, gc, vlc, elc,
+              tsc, tvc, tec,tgc,tvlc,telc,tatt);
+
+    free(sc);free(vc);free(ec);free(gc);free(vlc);free(elc);
+    free(tsc);free(tvc);free(tec);free(tgc);free(tvlc);free(telc);free(tatt);
     return rlt;
 }
 
@@ -505,6 +518,11 @@ int codeGen (struct Node * node) {
             // code and type already done in ASTree.c
             break;
         case IDENTIFIER :
+            //if (tmpTableLookup(node->symbol->key) == NULL) {
+            //    SymbolTableEntry *e = (SymbolTableEntry *) malloc (sizeof (SymbolTableEntry));
+            //    sEntryCopy( e, node->symbol );
+            //    tmpTableInsert( e );
+            //}
             // type is done when insert into symtable
             if (node->symbol->bind!=NULL){  // should always true 
                 if(inMATCH==0){ // not in Match
@@ -1512,9 +1530,9 @@ int codeGen (struct Node * node) {
 				char* ti = lf->child[1]->symbol->bind;
 				char* tlen = strCatAlloc("", 1, tmpVab(INT_T, node->scope[1]));
 				char* tc = strCatAlloc("", 1, tmpVab(INT_T, node->scope[1]));
-				node->code = strRightCatAlloc(node->code, "" , 27,
+				node->code = strRightCatAlloc(node->code, "" , 25,
                     INDENT[node->scope[0]], "// START_FOREACH\n",
-					INDENT[node->scope[0]], sTypeName(ltype), " * ", ti, " = NULL;\n",
+					INDENT[node->scope[0]], ti, " = NULL;\n",
 					INDENT[node->scope[0]], "int ", tlen, " = g_list_length(", sg->code, "->list);\n",
 					INDENT[node->scope[0]], "int ", tc, ";\n",
 					INDENT[node->scope[0]], "for (", tc, "=0; ", tc, "<", tlen, "; ", tc, "++) {\n");
@@ -1694,15 +1712,16 @@ int codeGen (struct Node * node) {
             nort = *(int *) gp;
             noReturn = g_list_remove( noReturn, gp );
             // clean lists
+            char * initcode = allInitTmpVabCodeInScope( rt->scope[1], FuncParaList, 1 );
             g_list_free( FuncParaList );
             FuncBody = NULL;
             inFunc--;
-            if ( nort <= 0 && lf->lexval.ival != VOID_T ) {
+            if ( nort <= 0 ) {
                 ERRNO = ErrorNoReturnInFunc;
                 errorInfo(ERRNO, node->line, "missing return in function declaration.\n");
+                free(initcode);
                 return ERRNO;
             } 
-            char * initcode = allInitTmpVabCodeInScope( rt->scope[1], NULL, 1 );
             int flag0 = 0;
             int type0 = lf->lexval.ival;
             if (type0 == VERTEX_T || type0 == EDGE_T || type0 == VLIST_T ||
@@ -1737,15 +1756,16 @@ int codeGen (struct Node * node) {
             nort = *(int *) gp;
             noReturn = g_list_remove( noReturn, gp );
             // clean lists
+            char * initcode = allInitTmpVabCodeInScope( rt->scope[1], FuncParaList, 1 );
             g_list_free( FuncParaList );
             FuncBody = NULL;
             inFunc--;
-            if ( nort <= 0 && lf->lexval.ival != VOID_T ) {
+            if ( nort <= 0 ) {
                 ERRNO = ErrorNoReturnInFunc;
                 errorInfo(ERRNO, node->line, "missing return in function literal declaration.\n");
+                free(initcode);
                 return ERRNO;
             }
-            char * initcode = allInitTmpVabCodeInScope( rt->scope[1], NULL, 1 );
             int flag0 = 0;
             int type0 = lf->lexval.ival;
             if (type0 == VERTEX_T || type0 == EDGE_T || type0 == VLIST_T ||

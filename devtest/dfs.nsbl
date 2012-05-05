@@ -24,11 +24,12 @@ void dfs(graph g, vertex v)
 			le1 <: e; 
 			vlist lv1 = le1|endV;
 			//print<<lv1;
-			foreach(vertex v1: lv1) lv <: v1;
+			foreach(vertex v1: lv1) { lv <: v1; }
 			//print<<"length of lv: "<<length(lv)<<"\n";
 		}
 		i = i + 1;
 	}
+    return;
 }
 
 vertex v0,v1,v2,v3,v4,v5;
