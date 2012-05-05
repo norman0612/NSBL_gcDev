@@ -133,6 +133,10 @@ int                 g_insert_v(GraphType* g, VertexType* v);
 int                 g_insert_e(GraphType* g, EdgeType* v);
 int                 g_insert_subg(GraphType* g, GraphType* subg);
 int					g_append_list(GraphType* g, ListType* list);
+void                g_free_a_vertex( gpointer key, gpointer value, gpointer dummy );
+void                g_free_an_edge( gpointer key, gpointer value, gpointer dummy );
+void                g_free_all_vertex( GHashTable * gh );
+void                g_free_all_edge( GHashTable * gh );
 
 ListType* 			match_string(ListType* list, char* attribute, char* s);
 ListType* 			match_num(ListType* list, char* attribute, float a, int op);

@@ -4,7 +4,7 @@ MXMLDIR = ../mxmldir
 LIBDIR = ../lib
 INCLUDEDIR = ../include
 
-CFLAGS = -D_NO_LOG 
+CFLAGS = -D_DEBUG 
 ##### CFLAGS Options ############
 # -D_AST_DEBUG
 # -D_AST_DEBUG_ALL
@@ -24,7 +24,7 @@ YFLAGS =
 GLIBLINK = `pkg-config --cflags --libs glib-2.0`
 YACCLIB = -ly -lfl
 
-CC = gcc -g $(CFLAGS) $(GLIBLINK)
+CC = gcc -pg $(CFLAGS) $(GLIBLINK)
 LEX = flex
 YACC = yacc
 AR = ar
@@ -72,7 +72,7 @@ NSBLio.o: NSBLio.c
 FileReadWrite.o: FileReadWrite.h FileReadWrite.c libmxml.a 
 	$(CC) -c FileReadWrite.c 
 libmxml.a :  
-#	cd $(MXMLDIR); ./configure; make libmxml.a; cd -
+	cd $(MXMLDIR); ./configure; make libmxml.a; cd -
 	mkdir -p $(LIBDIR)
 	cp $(MXMLDIR)/libmxml.a $(LIBDIR)
 runlibs: NSBLio.o Derivedtype.o FileReadWrite.o GC.o
@@ -103,7 +103,7 @@ clean :
 clean-include :
 	rm -f $(INCLUDEDIR)/*
 
-distclean : clean clean-include
+distclean : clean clean-include clean-mxml
 	rm -f $(BINDIR)/n2c.exe $(BINDIR)/nsbl nsbl
 	rm -f $(LIBDIR)/libnsblgraph.a $(LIBDIR)/libmxml.a
 	rm -f -r $(BINDIR) $(LIBDIR) $(INCLUDEDIR)
