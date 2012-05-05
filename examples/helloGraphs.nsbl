@@ -45,6 +45,6 @@ graph g1;
 s >> g1;
 print<<"g1 the new graph is \n"<<g1;
 vlist vl = g1.allV;
-foreach(vertex v:vl) print<<"vertex of g1:\n"<<v;
+foreach(vertex v:vl) {print<<"vertex of g1:\n"<<v;}
 elist el = g1.allE;
-foreach(edge e:el) print<<"edge of g1:\n"<<e;
+foreach(edge e:el) {print<<"edge of g1:\n"<<e;}
