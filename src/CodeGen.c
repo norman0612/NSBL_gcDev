@@ -1503,13 +1503,15 @@ int codeGen (struct Node * node) {
         case AST_FOREACH :{
 			lf = node->child[0]; sg = node->child[1]; rt = node->child[2];
             // break or continue is forbidden 
-			codeGen(lf); codeGen(sg); codeGen(rt);
+			codeGen(lf); 
+            codeGen(sg); 
+            node->code = codeFrontDecl(node->scope[0] );
+            codeGen(rt);
 			int ltype = lf->child[1]->type, rtype = sg->type;
 			if( ltype==VERTEX_T&&rtype==VLIST_T || ltype==EDGE_T&&rtype==ELIST_T ){
 				char* ti = lf->child[1]->symbol->bind;
 				char* tlen = strCatAlloc("", 1, tmpVab(INT_T, node->scope[1]));
 				char* tc = strCatAlloc("", 1, tmpVab(INT_T, node->scope[1]));
-            	node->code = codeFrontDecl(node->scope[0] );
 				node->code = strRightCatAlloc(node->code, "" , 27,
                     INDENT[node->scope[0]], "// START_FOREACH\n",
 					INDENT[node->scope[0]], sTypeName(ltype), " * ", ti, " = NULL;\n",

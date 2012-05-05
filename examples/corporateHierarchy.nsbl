@@ -53,6 +53,7 @@ foreach (vertex tempV1: query1){
 
 print<<"Determining the names of the employees who have a salary greater than 1100 through function literal:\n";
 int aaa = 1100;
-foreach(vertex tempV2:social.allV?[cond(aaa)]){
+vlist vvv = social.allV;
+foreach(vertex tempV2: vvv?[cond(aaa)]){
 	print<<tempV2.name<<"\n";
 }
