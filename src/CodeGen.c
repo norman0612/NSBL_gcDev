@@ -1693,6 +1693,10 @@ int codeGen (struct Node * node) {
                     " ( ", sg->code," ) ", "{\n",
                     initcode,
                     rt->code, "}\n");
+            node->codetmp = strCatAlloc("", 6,
+                    sTypeName(lf->lexval.ival),(flag0)? " * ":" ",
+                    node->symbol->bind,     // func_id
+                    " ( ", sg->code," );\n ");
             free(initcode);
             //showASTandST(node,"Function Definition");
             break;
@@ -1740,8 +1744,7 @@ int codeGen (struct Node * node) {
                     type0 == ELIST_T ||type0 == STRING_T || type0 == GRAPH_T) flag0 = 1;
             //    put code to node->codetmp, as we need put all func_literals in
             // the external in target code.
-            node->code = NULL;
-            node->codetmp = strCatAlloc("", 11,
+            node->code = strCatAlloc("", 11,
                     sTypeName(lf->lexval.ival),(flag0)? " * " : " ",
                     node->symbol->bind,  // func_id
                     " ( void * _obj, int _obj_type",
@@ -1749,6 +1752,12 @@ int codeGen (struct Node * node) {
                      sg->code, " ) ", "{\n",
                     initcode,
                     rt->code, "}  // END_OF_FUNC_LITERAL\n");
+            node->codetmp = strCatAlloc("", 7,
+                    sTypeName(lf->lexval.ival),(flag0)? " * " : " ",
+                    node->symbol->bind,  // func_id
+                    " ( void * _obj, int _obj_type",
+                    (sg->nch==1) ? "" : " , ",
+                     sg->code, " );\n ");
             free(initcode);
             break;
         }
@@ -1883,8 +1892,10 @@ int codeAllGen(struct Node* node, char ** mainCode, char ** funCode) {
 void codeAllFuncLiteral(struct Node* node, char ** code) {
     // travel the entire tree, get all func_literals
     if (node==NULL) return;
-    if (node->token == FUNC_LITERAL ||
-            node->token == AST_MATCH ) {
+    if (node->token == FUNC_LITERAL ) {
+        *code = strRightCatAlloc( *code, "", 2, node->code, "\n");
+    }
+    else if ( node->token == AST_MATCH ) {
         *code = strRightCatAlloc( *code, "", 2, node->codetmp, "\n");
         // DO NOT return, for nested Func_Literal
         //if (node->token == FUNC_LITERAL) return;
@@ -1908,6 +1919,12 @@ void codeAllGlobal(struct Node* node, char ** code) {
         if (node->scope[0] == 0)
             *code = strRightCatAlloc( *code, "", 1, node->codetmp);
         return;
+    }
+    else if(node->token == AST_FUNC) {
+        *code = strRightCatAlloc( *code, "", 1, node->codetmp );
+    }
+    else if (node->token == FUNC_LITERAL ) {
+        *code = strRightCatAlloc( *code, "", 1, node->codetmp );
     }
     int i;
     for (i=0; i<node->nch; ++i) {
