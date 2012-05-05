@@ -687,24 +687,26 @@ int g_remove_vertex(GraphType* g, VertexType* v){
 }
 
 int g_insert_v(GraphType* g, VertexType* v){
-	if(g==NULL || v==NULL)
-		return 0;
-    g->vertexIdList = g_list_append(g->vertexIdList, &(v->id));
-    g_hash_table_insert(g->vertices, &(v->id), (void*) v);
-    v->ings = g_list_append(v->ings, g);
-    // GC
-    gcRef( (void *) v, VERTEX_T );
+	if(g==NULL || v==NULL) return 0;
+    if (g_hash_table_lookup(g->vertices, &(v->id))==NULL) {
+        g->vertexIdList = g_list_append(g->vertexIdList, &(v->id));
+        g_hash_table_insert(g->vertices, &(v->id), (void*) v);
+        v->ings = g_list_append(v->ings, g);
+        // GC
+        gcRef( (void *) v, VERTEX_T );
+    }
     return 0;
 }
 
 int g_insert_e(GraphType* g, EdgeType* e){
-	if(g==NULL || e==NULL)
-		return 0;
-    g->edgeIdList = g_list_append(g->edgeIdList, &(e->id));
-    g_hash_table_insert(g->edges, &(e->id), e);
-    e->ings = g_list_append(e->ings, g);
-    // GC
-    gcRef( (void *) e, EDGE_T );
+	if(g==NULL || e==NULL) return 0;
+    if (g_hash_table_lookup(g->edges, &(e->id))==NULL) {
+        g->edgeIdList = g_list_append(g->edgeIdList, &(e->id));
+        g_hash_table_insert(g->edges, &(e->id), e);
+        e->ings = g_list_append(e->ings, g);
+        // GC
+        gcRef( (void *) e, EDGE_T );
+    }
     return 0;
 
 }

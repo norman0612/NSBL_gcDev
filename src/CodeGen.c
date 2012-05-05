@@ -22,15 +22,18 @@ char * OUTFILE;                 // Output file name
 FILE * OUTFILESTREAM;           // Output file stream
 
 int     inLoop, 
-        inFunc;                 // flags to indicate : inside of loop or func
+        inFunc,                 // flags to indicate : inside of loop or func
+        inFuncLiteral,
+        isFunc;
 int     inMATCH,                // flags to indicate : inside of match operator
         existMATCH,             //                   : exist match operator in subtree of AST
         existPIPE,              //                   : exist pipe operator in subtree of AST
         nMATCHsVab;             // count number of dynamic variables in Match
 GList *returnList, *noReturn, *FuncParaList;
+GList *returnList2, *noReturn2;
 char * matchStaticVab, *frontDeclExp, *frontDeclExpTmp1;
 char * LoopGotoLabel;
-struct Node * FuncBody, * LoopBody;
+struct Node * FuncBody, *FuncLiteralBody, * LoopBody;
 
 void derivedTypeInitCode(struct Node* node, int type, int isglobal){
 	if(node->token == AST_COMMA){
@@ -1635,14 +1638,25 @@ int codeGen (struct Node * node) {
             break;
         }
         case AST_JUMP_RETURN : { 
-            if(inFunc<0) {
+            if(inFunc<0 && inFuncLiteral<0 ) {
                 ERRNO = ErrorCallReturnOutsideOfFunc;
                 errorInfo(ERRNO, node->line, "call `return' outside of function or function literal\n");
                 return ERRNO;
             }
             else {
-                int rtype = * (int *) g_list_nth_data ( returnList, inFunc );   // obtain return type
-                (* (int *) g_list_nth_data ( noReturn, inFunc ) ) ++ ;          // count number of returns
+                int rtype;
+                if(isFunc == 1) { // FUNC
+                    rtype  = * (int *) g_list_nth_data ( returnList, inFunc );   // obtain return type
+                    (* (int *) g_list_nth_data ( noReturn, inFunc ) ) ++ ;          // count number of returns
+                }
+                else if (isFunc == -1) { // FL
+                    rtype  = * (int *) g_list_nth_data ( returnList2, inFuncLiteral );
+                    (* (int *) g_list_nth_data ( noReturn2, inFuncLiteral ) ) ++;
+                }
+                else {
+                    fprintf(stderr, "wrong in return for isFunc\n");
+                    return -1;
+                }
                 char * freecode = NULL, * rtcode = NULL;
                 int iptr = (rtype == VLIST_T || rtype == ELIST_T || rtype == VERTEX_T || rtype == EDGE_T || rtype == GRAPH_T || rtype == STRING_T) ? 1 : 0;
                 // type checking and return code
@@ -1680,10 +1694,14 @@ int codeGen (struct Node * node) {
                     }
                 }
                 // get all scope ids from the funcbody to this return
+                struct Node * gfb = NULL;
+                if (isFunc == 1) gfb = FuncBody;
+                else if (isFunc == -1) gfb = FuncLiteralBody;
                 int found = 0;
-                GList * allscope = getAllScopeIdInside(FuncBody, NULL, node, &found);
+                GList * allscope = getAllScopeIdInside(
+                    gfb, NULL, node, &found);
                 if (found == 0) {
-                    fprintf(stderr, "coding wrong for getAllScopeIdInside !!!!!\n");
+                    fprintf(stderr, "coding wrong for getAllScopeIdInside at %d!!!!!\n", node->line);
                 }
                 // freecode for GC
                 int tl = g_list_length ( allscope );
@@ -1709,9 +1727,11 @@ int codeGen (struct Node * node) {
             rt = node->child[2];            // compound_statement
             codeGen(sg); 
             int zero = 0, nort;
-            inFunc++; 
+            int oldisFunc = isFunc;
+            inFunc++; isFunc = 1; 
             // set para list to global
-            FuncParaList = getAllParaInFunc(sg->child[1], NULL);
+            if(sg->nch == 1) FuncParaList = NULL; 
+            else FuncParaList = getAllParaInFunc(sg->child[1], NULL);
             // get all scope ids in the body of func
             FuncBody = rt;
             // get return type and number returns
@@ -1726,7 +1746,7 @@ int codeGen (struct Node * node) {
             char * initcode = allInitTmpVabCodeInScope( rt->scope[1], FuncParaList, 1 );
             g_list_free( FuncParaList );
             FuncBody = NULL;
-            inFunc--;
+            inFunc--; isFunc = oldisFunc;
             if ( nort <= 0 ) {
                 ERRNO = ErrorNoReturnInFunc;
                 errorInfo(ERRNO, node->line, "missing return in function declaration.\n");
@@ -1753,24 +1773,31 @@ int codeGen (struct Node * node) {
             rt = node->child[2];            // compound_statement
             codeGen(sg); 
             int zero = 0, nort;
-            inFunc++;
+            if (inFuncLiteral >=0 ) {
+                ERRNO = ErrorNestedFuncLiteralInFuncLiteral;
+                errorInfo(ERRNO, node->line, "nested function literal in another function literal.\n");
+                return ERRNO;
+            }
+            int oldisFunc = isFunc;
+            inFuncLiteral++; isFunc = -1;
             // set para list to global
-            FuncParaList = getAllParaInFunc(sg->child[1], NULL);
+            if (sg->nch == 1) FuncParaList = NULL;
+            else FuncParaList = getAllParaInFunc(sg->child[1], NULL);
             // set body pointer to global (used in AST_RETURN)
-            FuncBody = rt;
+            FuncLiteralBody = rt;
             // get return type and number returns
-            returnList = g_list_append(returnList, (gpointer) & (lf->lexval.ival) );
-            noReturn = g_list_append( noReturn, (gpointer) &zero); 
+            returnList2 = g_list_append(returnList2, (gpointer) & (lf->lexval.ival) );
+            noReturn2 = g_list_append( noReturn2, (gpointer) &zero); 
             codeGen(rt); 
-            returnList = g_list_remove(returnList, g_list_nth_data(returnList, inFunc) );
-            gpointer gp = g_list_nth_data( noReturn, inFunc );
+            returnList2 = g_list_remove(returnList2, g_list_nth_data(returnList2, inFuncLiteral) );
+            gpointer gp = g_list_nth_data( noReturn2, inFuncLiteral );
             nort = *(int *) gp;
-            noReturn = g_list_remove( noReturn, gp );
+            noReturn2 = g_list_remove( noReturn2, gp );
             // clean lists
             char * initcode = allInitTmpVabCodeInScope( rt->scope[1], FuncParaList, 1 );
             g_list_free( FuncParaList );
-            FuncBody = NULL;
-            inFunc--;
+            FuncLiteralBody = NULL;
+            inFuncLiteral--; isFunc = oldisFunc;
             if ( nort <= 0 ) {
                 ERRNO = ErrorNoReturnInFunc;
                 errorInfo(ERRNO, node->line, "missing return in function literal declaration.\n");
