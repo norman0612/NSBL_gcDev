@@ -51,6 +51,7 @@
 #define ErrorIllegalDerivedTypeDeclaration              +76
 #define ErrorInitDerivedType                            +77
 #define ErrorPrintWrongType                             +78
+#define ErrorNestedFuncLiteralInFuncLiteral             +79
 
 
 #define ErrorCallBreakOutsideOfLoop                     +80
