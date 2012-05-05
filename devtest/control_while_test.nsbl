@@ -57,14 +57,11 @@ v0.itr = 0;
 while(v0.b){
 	elist el_in_for  = vl1|outE?[@level>v0.itr];
 	if(elistlength(el_in_for) == 0)
-		break;
+		{break;}
 	print << "leves greater then: "<<v0.itr<<"\n";
-	foreach(edge et : el_in_for) print <<et;
+	foreach(edge et : el_in_for) {print <<et;}
 	print <<"EDN=========\n";
-	del el_in_for;
 	v0.itr = v0.itr+1;
 }
 
 
-del v0, v1, v2, v3, v4, v5;
-del vl1, vl2, vl3, vl4, el1, el2;

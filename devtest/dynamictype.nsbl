@@ -1,7 +1,7 @@
 vertex v;
 
-int v::a = 10;
-float v::b = 3;
+v.a = 10;
+v.b = 3;
 
 v.a = v.b* v.a;
 

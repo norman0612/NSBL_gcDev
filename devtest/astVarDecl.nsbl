@@ -24,13 +24,13 @@ s = "abcd";             // OK
         int p;          // OK
     }
     p=1;                // ERROR :: not declared
-    a+=1;               // OK
+    a=a + 1;               // OK
 }
 
-k+=2;                   // k in scope 0
+k=k+2;                   // k in scope 0
 
 {
-    j*=2;               // j in scope 0
+    j=j*2;               // j in scope 0
 }
 
 graph g1, g2;
@@ -39,11 +39,11 @@ vertex v1, v2;
 
 string s1="test s1", s2="test s2", s3;
 
-string v1::name = "Tom";
-int v1::age = 18;
-int v2::age = 19;
-float v1::weight = 55;
+v1.name = "Tom";
+v1.age = 18;
+v2.age = 19;
+v1.weight = 55;
 int testv = 2;
 float x, z;
 
-i+j = k;
+i = j+k;

@@ -1,34 +1,26 @@
 void dfs(graph g, vertex v) 
 {
-	vlist lv ;//= g.allV;
+	vlist lv ;
 	vertex temp;
 	temp = v;
 	int no_of_vertices = 0;
 	int i = 0;
-	//vertex vv = lv[0];
-	//print<<"printin g v from lv[0]\n"<<vv;
-	//print<<"Total number of vertices in the graph are: "<<length(lv)<<"\n";
 	lv <: temp;
 	while (i < length(lv))
 	{
-		//vertex temp= lv[i];
-		print<<"Traversed "<<lv[i]<<"\n";
-		//vlist t = [temp]; 
+		//print<<"Traversed "<<lv[i]<<"\n";
 		elist le = lv|outE;
-		//elist le1;
-		//print<<"printing list of edges\n"<<le;
 		foreach (edge e : le) 
 		{	
-			//print<<"in foreach\n";
 			elist le1;
 			le1 <: e; 
 			vlist lv1 = le1|endV;
-			//print<<lv1;
-			foreach(vertex v1: lv1) lv <: v1;
-			//print<<"length of lv: "<<length(lv)<<"\n";
+			foreach(vertex v1: lv1) {lv <: v1;}
 		}
 		i = i + 1;
 	}
+	print << lv;
+	return;
 }
 
 vertex v0,v1,v2,v3,v4,v5;
@@ -50,9 +42,6 @@ v3.w = 300.1;
 v4.w = 400.1;
 v5.w = 500.1;
 
-//v1.name="v1";
-//v2.name="v2";
-
 edge e0,e1,e2,e3,e4,e5;
 
 e1:v1->v2;
@@ -67,10 +56,6 @@ e3.name = "e3";
 e4.name = "e4";
 e5.name = "e5";
 
-//e1.w=45.89;
-//e1.age=45;
-//e1.name="e1";
-
 graph g, g1;
 
 g <: v1;
@@ -84,5 +69,4 @@ g <: e2;
 g <: e3;
 g <: e4;
 g <: e5;
-
 dfs(g, v1);
