@@ -39,12 +39,12 @@ for (i=0; i < length(le); i = i+1)
 	print<<"Edge "<<e.name<<" says Hello Graphs!\n";
 }
 
+
 string s = "gaph.xml";
 s << g;
 graph g1;
 s >> g1;
+
 print<<"g1 the new graph is \n"<<g1;
-vlist vl = g1.allV;
-foreach(vertex v:vl) print<<"vertex of g1:\n"<<v;
-elist el = g1.allE;
-foreach(edge e:el) print<<"edge of g1:\n"<<e;
+foreach(vertex v:g1.allV) { print<<"vertex of g1:\n"<<v; }
+foreach(edge e:g1.allE) { print<<"edge of g1:\n"<<e; }

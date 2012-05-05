@@ -187,10 +187,47 @@ int destroy_graph(GraphType* g){
     if ( (nref = gcDef( (void *) g, GRAPH_T )) > 0) return nref; 
     g_list_free_1(g->edgeIdList);
     g_list_free_1(g->vertexIdList);
+    //g_hash_table_foreach(g->vertices, &g_free_a_vertex, NULL);
+    //g_hash_table_foreach(g->edges, &g_free_a_vertex, NULL);   
+    g_free_all_vertex( g->vertices );
+    g_free_all_edge( g->edges );
     g_hash_table_destroy(g->edges);
     g_hash_table_destroy(g->vertices);
     free(g);
     return 0;
+}
+
+void g_free_all_vertex( GHashTable * gh ) {
+    GList * gl = g_hash_table_get_values ( gh );
+    int l = g_list_length( gl );
+    int i;
+    for (i=0; i<l; i++) {
+        VertexType * v = (VertexType *) g_list_nth_data( gl, i );
+        destroy_vertex( v );
+    }
+    g_list_free( gl );
+}
+
+void g_free_all_edge( GHashTable * gh ) {
+    GList * gl = g_hash_table_get_values ( gh );
+    int l = g_list_length( gl );
+    int i;
+    for (i=0; i<l; i++) {
+        EdgeType * e = (EdgeType *) g_list_nth_data( gl, i );
+        destroy_edge( e );
+    }
+    g_list_free( gl );
+}
+
+// glib bug : g_hash_table_foreach
+void g_free_a_vertex( gpointer key, gpointer value, gpointer dummy ) {
+    printf("%d\n", *(int*) key);
+    VertexType * v = (VertexType *) value;
+    destroy_vertex( v );
+}
+
+void g_free_an_edge( gpointer key, gpointer value, gpointer dummy ) {
+    destroy_edge( (EdgeType *) value );
 }
 
 int destroy_list(ListType* list){
@@ -435,6 +472,8 @@ int edge_assign_attribute ( EdgeType* e, char * attr_name, void * val, int type 
     else {
         attr = new_attr( type, NULL );
         g_hash_table_insert( e->attributes, attr_name, attr );
+        // GC : see vertex_assign_attribute
+        gcRef( (void *) attr, DYN_ATTR_T );
     }
     assign_attr( attr, type, val );
     return 0;
@@ -502,6 +541,9 @@ int vertex_assign_attribute(VertexType* v, char* attr_name, void * val, int type
     else {
         attr = new_attr( type, NULL );
         g_hash_table_insert( v->attributes, attr_name, attr );
+        // GC: in  FileReadWrite.c, when we read a graph from xml, need to append info
+        //   to GC
+        gcRef( (void *) attr, DYN_ATTR_T );
     }
     assign_attr( attr, type, val );
     return 0;
@@ -645,8 +687,10 @@ int g_insert_v(GraphType* g, VertexType* v){
 	if(g==NULL || v==NULL)
 		return 0;
     g->vertexIdList = g_list_append(g->vertexIdList, &(v->id));
-    g_hash_table_insert(g->vertices, &(v->id), v);
+    g_hash_table_insert(g->vertices, &(v->id), (void*) v);
     v->ings = g_list_append(v->ings, g);
+    // GC
+    gcRef( (void *) v, VERTEX_T );
     return 0;
 }
 
@@ -656,6 +700,8 @@ int g_insert_e(GraphType* g, EdgeType* e){
     g->edgeIdList = g_list_append(g->edgeIdList, &(e->id));
     g_hash_table_insert(g->edges, &(e->id), e);
     e->ings = g_list_append(e->ings, g);
+    // GC
+    gcRef( (void *) e, EDGE_T );
     return 0;
 
 }

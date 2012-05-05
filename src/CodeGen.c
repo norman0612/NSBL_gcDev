@@ -1824,9 +1824,9 @@ int codeGen (struct Node * node) {
             codeGen(lf); codeGen(rt);
             if ( lf->type == STRING_T && rt->type == GRAPH_T ) {
                 char * tg = tmpGraphVab();
-                node->code = strCatAlloc("", 10,
-                    INDENT[node->scope[0]], codeFreeFuncName(GRAPH_T), "( ", rt->code, " );\n",
-                    INDENT[node->scope[0]], rt->code, " = readGraph( ", lf->code, "->str );\n"
+                node->code = strCatAlloc("", 7,
+                    INDENT[node->scope[0]], assignFunc(GRAPH_T), " ( &( ",
+                        rt->code, " ) , readGraph( ", lf->code, "->str ) );\n" 
                 ); 
             }
             else {
