@@ -461,6 +461,8 @@ Attribute* edge_get_attribute(EdgeType* e, char* attribute, int autoNew, int lno
     if (attr == NULL && autoNew) {
         attr = new_attr(UNKNOWN_T, NULL);
         g_hash_table_insert( e->attributes, attribute, attr );
+		// GC
+		gcRef( (void *) attr, DYN_ATTR_T );
     }
     return attr;
 }

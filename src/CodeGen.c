@@ -144,9 +144,12 @@ void listInitCode(struct Node* node, int type, int isglobal){
         else node->code = strRightCatAlloc( node->code, "", 1, ") );\n");        
         // if not init by [], 
         if (flag<0) {
-            node->code = strRightCatAlloc( node->code, "", 5,
+			char * fc = codeFrontDecl( node->scope[0] );
+            node->code = strRightCatAlloc( node->code, "", 6,
+				fc,
                 "assign_operator_list ( & (", node->child[0]->symbol->bind, " ) , ( ",
                 node->child[1]->code, " ) );\n");
+			free(fc);
         }
         if(node->scope[0]==0) node->codetmp = strCatAlloc("",1,node->child[0]->codetmp);
     }

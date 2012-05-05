@@ -27,23 +27,25 @@ e2:v3->v1;
 e3:v4->v1;
 e4:v5->v1;
 
-g1 <: lv;
-g1 <: le;
-g1 <: v1;
+//g1 <: lv;
+//g1 <: le;
+//g1 <: v1;
 
 void hello(){
         print<<"Welcome to NSBL!\n";
 	foreach (vertex vtemp: lv)
 	{
-                print<<vtemp.name;
-                vlist lv1;
+        print<<vtemp.name;
+        vlist lv1;
 		lv1<:vtemp;
 		elist le1 = lv1|outE;
-		foreach(edge etemp: le1)
+		foreach(edge etemp: le1){
 			print<<etemp.relationship;
+		}
 		print<<" Hello ";
 		print<<v1.project<<"\n";
-        }
+    }
+	return;
 }
 hello();
 

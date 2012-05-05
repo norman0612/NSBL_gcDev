@@ -28,5 +28,6 @@ func cond():bool = { return (@weight>11); };
 
 elist edges=vertices|outE?[cond()];
 
-foreach(edge e: edges)
+foreach(edge e: edges){
         print<<e;
+}

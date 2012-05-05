@@ -16,7 +16,7 @@ void   strFreeAll(int n, ...);
 
 int codeGen (struct Node * node);
 int codeAllGen(struct Node* node, char ** mainCode, char ** funCode);
-
+char * codeFrontDecl(int lvl );
 char * opMacro(int ma);
 char * DynOP(int ma);
 char * typeMacro(int t);

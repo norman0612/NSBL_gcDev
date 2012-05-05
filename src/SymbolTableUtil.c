@@ -221,11 +221,13 @@ int sTableLookupFunc(struct Node* node) {
 
 /** output function heading */
 void FuncHead(char* funcId, GArray* typeCon, FILE* out) {
-    fprintf(out, "%s(", funcId);
+    fprintf(out, "%s()", funcId);
+	/*
     int i, ll=typeCon->len;
     for (i=0; i<ll-1; ++i)
         fprintf(out, "%s,", sTypeName( g_array_index(typeCon, int, i) ) );
     fprintf(out,"%s)", sTypeName( g_array_index(typeCon, int, ll-1) ) );
+	*/
 }
 
 /** check equivalence of two type constructors */

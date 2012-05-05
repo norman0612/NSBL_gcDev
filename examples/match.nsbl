@@ -27,4 +27,5 @@ vlist vertices = g.allV;
 elist edges=vertices|outE?[@weight>10];
 
 foreach(edge e: edges)
-	print<<e;
+{	print<<e;
+}
