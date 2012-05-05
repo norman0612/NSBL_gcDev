@@ -2,14 +2,14 @@ int x=0, y=0;
 
 vertex v1,v2,v3,v4,v5;
 edge e1,e2,e3,e4;
-list lv = [v1,v2,v3,v4];
-list le = [e1,e2,e3];
+vlist lv = [v1,v2,v3,v4];
+elist le = [e1,e2,e3];
 graph g1;
 
 
-string v1::project = "World";
-string v2::name = "Friend One";
-string v3::name = "Friend One";
+v1.project = "World";
+v2.name = "Friend One";
+v3.name = "Friend One";
 print << v1 << v2 << v3;
 v4.name = "Friend four";
 print << v4;
@@ -39,6 +39,7 @@ void hello() {
         print << etemp.rel;
         print << "Hello";
     }
+    return;
 }
 
 hello();

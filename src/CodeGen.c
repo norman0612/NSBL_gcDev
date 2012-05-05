@@ -1299,7 +1299,7 @@ int codeGen (struct Node * node) {
                     sTypeName(node->child[0]->type) );
                 node->code = NULL;
             }
-            node->type = DYNAMIC_T;
+            node->type = DYN_ATTR_T;
             break;
 /************************************************************************************/
         case AST_GRAPH_PROP :
