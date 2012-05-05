@@ -1,3 +1,5 @@
+// author : Jing
+//
 #include "GC.h"
 #include <stdio.h>
 #include <stdlib.h>

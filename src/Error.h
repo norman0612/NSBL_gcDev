@@ -1,3 +1,5 @@
+// author : Chantal, Kunal, Lixing, Jing
+
 #ifndef ERROR_H_NSBL_
 #define ERROR_H_NSBL_
 

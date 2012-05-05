@@ -1,3 +1,5 @@
+/* author : Jing */
+
 %{
 #include <stdio.h>
 #include "Parser.tab.h"
@@ -15,11 +17,12 @@ void countLine(const char* ptr);
 #include "global.h"
 %}
 
+letter          [A-Za-z]
 letter_         [A-Za-z_]
 digit           [0-9]
 floatconst      ({digit}*\.{digit}+|{digit}+\.{digit}*)([eE][+-]?{digit}+)?
 intconst        {digit}+
-identifier      {letter_}({letter_}|{digit})*
+identifier      {letter}({letter_}|{digit})*
 strliteral      \"([^\"\\]|\\.)*\"
 comment         (\/\*([^\*]|(\*+([^\*\/])))*\*+\/)|(\/\/.*)
 

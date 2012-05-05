@@ -1,6 +1,5 @@
+// author : Chantal, Kunal
 #include "FileReadWrite.h"
-
-
 
 //Function to write graph in xml format
   void saveGraph(GraphType* g, char* fileloc)

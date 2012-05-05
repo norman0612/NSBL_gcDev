@@ -1,10 +1,15 @@
+/****************************************
+ - Original Built-up : Jing
+ - Later Append: Chantal, Kunal, Lixing 
+ ****************************************/          
+
 #include "ASTree.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdarg.h>
 #include "util.h"
-#include "CodeGen.h"
+#include "CodeGenUtil.h"
 #include "global.h"
 
 #ifdef _AST_DEBUG_BASE

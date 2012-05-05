@@ -1,3 +1,4 @@
+// author: Jing
 #ifndef SYMBOLTABL_H_NSBL_
 #define SYMBOLTABL_H_NSBL_
 

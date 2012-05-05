@@ -1,3 +1,5 @@
+// author: Jing and Lixing
+
 #ifndef TYPE_H_NSBL
 #define TYPE_H_NSBL
 

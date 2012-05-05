@@ -1,3 +1,5 @@
+// author : Jing
+//
 #include <stdio.h>
 #include <stdarg.h>
 FILE* ERRORIO;

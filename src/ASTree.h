@@ -1,3 +1,5 @@
+// author : Jing
+
 #ifndef ASTREE_H_NSBL_
 #define ASTREE_H_NSBL_
 /***************************************

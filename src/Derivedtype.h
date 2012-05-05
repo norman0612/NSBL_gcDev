@@ -1,3 +1,5 @@
+// author : Lixing
+
 #ifndef DERIVEDTYPE_H_NSBL
 #define DERIVEDTYPE_H_NSBL
 #include "type.h"

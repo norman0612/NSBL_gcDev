@@ -1,3 +1,14 @@
+/*********************************************
+  - Grammar Syntax :
+    I/O : Chantal, Kunal
+    Experssion, Declaration, Auxiliary : Jing
+    Statement : Lixing
+  - AST construction :
+    I/O : Chantal, Kunal
+    Experssion, Declaration, Auxiliary : Jing
+    Statement : Lixing
+**********************************************/
+
 %{
 #include <stdio.h>
 #include <stdlib.h>
@@ -12,6 +23,7 @@ extern int yyparse(void);
 #include "SymbolTable.h"
 #include "SymbolTableUtil.h"
 #include "util.h"
+#include "CodeGenUtil.h"
 #include "CodeGen.h"
 #include "global.h"
 %}

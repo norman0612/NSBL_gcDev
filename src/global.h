@@ -1,3 +1,5 @@
+// author : Jing
+
 #ifndef GLOBAL_H_NSBL_
 #define GLOBAL_H_NSBL_
 #include <stdio.h>

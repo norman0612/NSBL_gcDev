@@ -1,3 +1,4 @@
+// author : Jing
 #include <stdio.h>
 #include <stdlib.h>
 #include "global.h"
@@ -176,36 +177,6 @@ int sTableLookupFunc(struct Node* node) {
     GArray* caller = node->typeCon;
     GArray* ref    = entry->typeCon;
     int flag = 0;
-/*    if(entry->type == FUNC_T) {   // if function
-        if(caller->len != ref->len) {
-            flag = (ERRNO = ErrorFunctionCallNOTEqualNumberOfParameters); 
-            errorInfo(ERRNO, node->line, "function Call `");
-            FuncHead(funcId->lexval.sval, caller, ERRORIO);
-            errorInfoExt("' has inconsistent number of arguments to its declaration.\n");
-        }
-        else {
-            if ( checkTwoTypeCons(caller, ref) == 0 ) { // not equal
-                flag = (ERRNO = ErrorFunctionCallIncompatibleParameterType);
-                errorInfo(ERRNO, node->line, "function Call `");
-                FuncHead(funcId->lexval.sval, caller, ERRORIO);
-                errorInfoExt("' has incompatible arguments to its declaration.\n");
-            }
-        }
-    }
-    else if(entry->type == FUNC_LITERAL_T) { // func_literal
-        if ( checkTwoTypeConsExceptDyn(caller, ref) == 0 ) { // not equal
-            flag = (ERRNO = ErrorFuncLiteralCallIncompatibleParameterType);
-            errorInfo(ERRNO, node->line, "function literal Call `");
-            FuncHead(funcId->lexval.sval, caller, ERRORIO);
-            errorInfoExt("' has incompatible arguments to its declaration.\n");
-        }
-    }
-    else {
-        flag = (ERRNO = ErrorFunctionCalledBeforeDeclaration);
-        errorInfo(ERRNO, node->line,"`%s' is not declared as a function or function literal\n",funcId->lexval.sval );
-        errorInfoNote("`%s' is first declared at line %d\n",funcId->lexval.sval,entry->line);
-        return ERRNO;
-    }*/
     if (flag == ErrorFunctionCallNOTEqualNumberOfParameters ||
             flag == ErrorFunctionCallIncompatibleParameterType ||
                 flag == ErrorFuncLiteralCallIncompatibleParameterType ) {

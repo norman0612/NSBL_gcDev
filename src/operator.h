@@ -1,3 +1,5 @@
+// author : Jing
+
 #ifndef OPERATOR_H_NSBL
 #define OPERATOR_H_NSBL
 
