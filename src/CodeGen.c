@@ -107,8 +107,8 @@ void stringInitCode(struct Node* node, int type, int isglobal){
 	}else if(node->token == AST_ASSIGN){
         codeGen(node->child[0]); codeGen(node->child[1]);
 		//if(isglobal)
-			node->code = strCatAlloc("",5,INDENT[node->scope[0]], 
-                node->child[0]->symbol->bind, " = ", node->child[1]->code, ";\n"); 
+			node->code = strCatAlloc("",6,INDENT[node->scope[0]],"assign_operator_string( &(", 
+                node->child[0]->symbol->bind, " ), ", node->child[1]->code, ");\n"); 
 		//else
 		//	node->code = strCatAlloc("",7,INDENT[node->scope[0]], 
         //        sTypeName(type), " * ", node->child[0]->symbol->bind, " = ", node->child[1]->code, ";\n");	
@@ -116,7 +116,8 @@ void stringInitCode(struct Node* node, int type, int isglobal){
 	}else{
         codeGen(node);
 		//if(isglobal)
-			node->code = strCatAlloc("",3,INDENT[node->scope[0]], node->symbol->bind, " = g_string_new(\"\");\n"); 
+			node->code = strCatAlloc("",4,INDENT[node->scope[0]], "assign_operator_string( &(",
+                node->symbol->bind, " ), g_string_new(\"\") );\n"); 
 		//else
 		//	node->code = strCatAlloc("",5,INDENT[node->scope[0]], sTypeName(type), " * ", node->symbol->bind, " = g_string_new(\"\");\n");
 	}
@@ -376,7 +377,7 @@ char * codeForInitTmpVabInScope ( ScopeId sid, int type, GList * gl, ScopeId lvl
     int i, l = g_list_length( vals );
     SymbolTableEntry * e;
     int isptr = ( type == VLIST_T || type == ELIST_T || type == GRAPH_T || type == VERTEX_T ||
-        type == EDGE_T || type == DYN_ATTR_T ) ? 1: 0 ;
+        type == EDGE_T || type == DYN_ATTR_T || type == STRING_T) ? 1: 0 ;
     char * def;
     switch (type) {
         case BOOL_T: def = "false"; break;
@@ -387,8 +388,13 @@ char * codeForInitTmpVabInScope ( ScopeId sid, int type, GList * gl, ScopeId lvl
     for ( i=0; i<l; ++i ){
         e = (SymbolTableEntry *) g_list_nth_data( vals, i );
         if( g_list_find( gl, (gpointer) e ) == NULL ) {
-            code = strRightCatAlloc( code, "", 7, INDENT[lvl], sTypeName(e->type),
+            if(sid!=0 || which == 1) 
+                code = strRightCatAlloc( code, "", 7, INDENT[lvl], sTypeName(e->type),
                  (isptr) ? " * ": " ", e->bind, " = ", def, ";\n");
+            else
+                code = strRightCatAlloc( code,"", 5, INDENT[lvl],
+                    e->bind, " = ", def, ";\n");
+    
         }
     }
     g_list_free( vals );
@@ -1828,15 +1834,29 @@ int codeGen (struct Node * node) {
 	    case AST_PRINT : {
             codeGen(node->child[0]);
             int tt = node->child[0]->type;
-            if ( tt >= 0 ) {
+            if ( tt == BOOL_T || tt == INT_T || tt == FLOAT_T ) {
                 node->code = strCatAlloc("", 6,
                     INDENT[node->scope[0]], "print_", typeMacro(tt), " ( ",
                         node->child[0]->code, " );\n");
             }
-            else if ( tt < 0 ) {
-                node->code = strCatAlloc("", 4,
-                    INDENT[node->scope[0]], "print_attr ( ", 
-                        node->child[0]->code, " );\n");
+            else if ( tt == VLIST_T || tt == ELIST_T || tt == VERTEX_T ||
+                tt == EDGE_T || tt == GRAPH_T || tt == STRING_T || tt == DYN_ATTR_T) {
+                SymbolTableEntry* e = tmpVab( tt, node->scope[1] );
+                char * cass = tmpVabAssign( e, node->child[0]->code );
+                frontDeclExp = strRightCatAlloc( frontDeclExp, "",1 , cass);
+                if (tt != DYN_ATTR_T) 
+                    node->code = strCatAlloc ( "" ,6,
+                        INDENT[node->scope[0]], "print_", typeMacro(tt), " ( ",
+                            e->bind, " );\n");
+                else
+                    node->code = strCatAlloc("", 4,
+                        INDENT[node->scope[0]], "print_attr ( ",
+                            e->bind, " );\n");
+            }
+            else {
+                ERRNO = ErrorPrintWrongType;
+                errorInfo( ERRNO, node->line, "print wrong type.\n");
+                return ERRNO;
             }
             break;
 	    }

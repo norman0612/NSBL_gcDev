@@ -254,7 +254,7 @@ SymbolTableEntry* tmpVab(int type, ScopeId sid) {
 char * tmpVabAssign( SymbolTableEntry* e, char * value ) {
     if (e->type == DYN_ATTR_T || e->type == VLIST_T ||
             e->type == ELIST_T || e->type == VERTEX_T ||
-                e->type == EDGE_T || e->type == GRAPH_T ) {
+                e->type == EDGE_T || e->type == GRAPH_T || e->type == STRING_T) {
         return strCatAlloc("", 6,
         assignFunc( e->type )," ( &( ", e->bind, " ) , ", value, " );\n");
     }
