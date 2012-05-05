@@ -81,9 +81,9 @@ elist le = g.allE;
 vlist lv= g.allV;
 
 print<<"\n================printing g's==================\n";
-foreach(edge e: le) print<<e;
+foreach(edge e: le) {print<<e;}
 
-foreach(vertex v: lv) print<<v;
+foreach(vertex v: lv) {print<<v;}
 
 
 elist le1 = g1.allE;
@@ -92,6 +92,6 @@ vlist lv1 = g1.allV;
 
 print<<"\n================printing g1's==================\n";
 
-foreach(edge ee: le1) print<<ee; 
+foreach(edge ee: le1) {print<<ee; }
 
-foreach(vertex ve: lv1) print<<ve;
+foreach(vertex ve: lv1) {print<<ve;}

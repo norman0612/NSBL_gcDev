@@ -24,7 +24,7 @@ YFLAGS =
 GLIBLINK = `pkg-config --cflags --libs glib-2.0`
 YACCLIB = -ly -lfl
 
-CC = gcc -pg $(CFLAGS) $(GLIBLINK)
+CC = gcc  $(CFLAGS) $(GLIBLINK)
 LEX = flex
 YACC = yacc
 AR = ar

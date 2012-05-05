@@ -1,0 +1,6 @@
+string a = "CVSAFasdfasf";
+vertex v;
+v.a = "dlsahfkdsakjfhjkdshafkjhasdkhfjsahdfkj";
+
+string b;
+b = "ads";

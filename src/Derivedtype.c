@@ -116,12 +116,12 @@ int destroy_edge(EdgeType* e){
 #ifdef _DEBUG
     fprintf(stdout, "------ REMOVE me FROM all Gs\n");
 #endif
-    int l = g_list_length(e->ings);
+/*    int l = g_list_length(e->ings);
     int n = 0;
     for(n; n<l; n++){
         GraphType* g = g_list_nth_data(e->ings, n);
         g_remove_edge(g, e);
-    }
+    }*/
 #ifdef _DEBUG
     fprintf(stdout, "------ REMOVE INGs\n");
 #endif
@@ -163,13 +163,13 @@ int destroy_vertex(VertexType* v){
         v->inEdges = g_list_remove( v->inEdges, e );
     }
     l = g_list_length(v->ings);
-    for(n=0; n<l; n++){
 #ifdef _DEBUG
         fprintf(stdout, "====== REMOVE me FROM ALL Gs %d/%d\n", n, l );
 #endif
+/*    for(n=0; n<l; n++){
         GraphType* g = g_list_nth_data(v->ings, n);
         g_remove_vertex(g, v);
-    }
+    }*/
 #ifdef _DEBUG
     fprintf(stdout, "====== REMOVE MYSELF: outE, inE, ings\n");
 #endif
@@ -189,8 +189,8 @@ int destroy_graph(GraphType* g){
     g_list_free_1(g->vertexIdList);
     //g_hash_table_foreach(g->vertices, &g_free_a_vertex, NULL);
     //g_hash_table_foreach(g->edges, &g_free_a_vertex, NULL);   
-    g_free_all_vertex( g->vertices );
     g_free_all_edge( g->edges );
+    g_free_all_vertex( g->vertices );
     g_hash_table_destroy(g->edges);
     g_hash_table_destroy(g->vertices);
     free(g);
@@ -385,6 +385,7 @@ int destroy_attr ( Attribute * attr ) {
             fprintf(stderr," STRING_T --> %s\n", attr->value.sv->str); break;
     }
 #endif
+
     if ( attr->type == STRING_T ) g_string_free( attr->value.sv, 1 );
     free( attr );
 }
@@ -432,7 +433,7 @@ bool get_attr_value_BOOL_T(Attribute* attr, int lno) {
 StringType* get_attr_value_STRING_T(Attribute* attr, int lno) {
     if(attr == NULL) die(lno, "get_attr_value_STRING_T: null attribute.\n");
     if(attr->type == STRING_T)
-        return attr->value.sv;
+        return g_string_new(attr->value.sv->str);
     else
         die(lno, "get_attr_value_STRING_T: atttribute type NOT STRING.\n");
 }
@@ -1538,37 +1539,37 @@ ListType* list_pipe(ListType* l, int type, int pipe_op, int rm_l){
 }
 
 ListType*           assign_operator_list(ListType** l1, ListType* l2) {
-    if (*l1 != NULL) gcDef(*l1, LIST_T);
+    if (*l1 != NULL) destroy_list(*l1); //gcDef(*l1, LIST_T);
     gcRef(l2, LIST_T);
     return (*l1 = l2);
 }
 
 VertexType*         assign_operator_vertex(VertexType** v1, VertexType* v2) {
-    if (*v1 != NULL) gcDef(*v1, VERTEX_T);
+    if (*v1 != NULL) destroy_vertex(*v1); //gcDef(*v1, VERTEX_T);
     gcRef(v2, VERTEX_T);
     return (*v1 = v2);
 }
 
 EdgeType*           assign_operator_edge(EdgeType** e1, EdgeType* e2) {
-    if (*e1 != NULL) gcDef(*e1, EDGE_T);
+    if (*e1 != NULL) destroy_edge(*e1); //gcDef(*e1, EDGE_T);
     gcRef(e2, EDGE_T);
     return (*e1 = e2);
 }
 
 GraphType*          assign_operator_graph(GraphType** g1, GraphType* g2) {
-    if (*g1 != NULL) gcDef(*g1, GRAPH_T);
+    if (*g1 != NULL) destroy_graph(*g1); //gcDef(*g1, GRAPH_T);
     gcRef(g2, GRAPH_T);
     return (*g1 = g2);
 }
 
 Attribute*          assign_operator_attr(Attribute** a1, Attribute* a2) {
-    if (*a1 != NULL) gcDef(*a1, DYN_ATTR_T);
+    if (*a1 != NULL) destroy_attr(*a1); //gcDef(*a1, DYN_ATTR_T);
     gcRef(a2, DYN_ATTR_T);
     return *a1 = a2;
 }
 
 StringType*	assign_operator_string(StringType** s1, StringType* s2) {
-    if (*s1 != NULL) gcDef(*s1, STRING_T);
+    if (*s1 != NULL) destroy_string(*s1);
     gcRef(s2, STRING_T);
     return (*s1 = s2);
 }
