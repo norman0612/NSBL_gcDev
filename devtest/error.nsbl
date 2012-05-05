@@ -1,11 +1,11 @@
-int i= 2,j,k                // missing ;
+int i= 2,j,k;                // missing ;
 
 float a = 1;
 
 {}
 
-int a() {}
+int ab() {return 0;}
 
-func la():void = {};
+func la():void = {return;};
 
 
