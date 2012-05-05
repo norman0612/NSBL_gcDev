@@ -321,3 +321,16 @@ SymbolTableEntry* tmp_new_var_entry (Lexeme lex, int type, ScopeId sid ) {
     tmp_new_bind ( entry, entry->bind );
     return entry;
 }
+
+int s_entry_copy ( SymbolTableEntry * dest, SymbolTableEntry * source ) {
+    strcpy( dest->lex, source->lex );
+    dest->type = source->type;
+    dest->rtype = source->rtype;
+    dest->typeCon = NULL;
+    dest->scope[0] = source->scope[0];
+    dest->scope[1] = source->scope[1];
+    strcpy( dest->key, source->key );
+    strcpy( dest->bind, source->key );
+    dest->line = source->line;
+    return 0;
+}
