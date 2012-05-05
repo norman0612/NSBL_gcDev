@@ -9,6 +9,7 @@
 #define MYECHO 
 #endif
 void  myecho();
+char * myTextCopy();
 void countLine(const char* ptr);
 #include "util.h"
 #include "global.h"
@@ -97,28 +98,23 @@ comment         (\/\*([^\*]|(\*+([^\*\/])))*\*+\/)|(\/\/.*)
 "true"          { MYECHO; yylval.LString.l = LEXLINECOUNTER; return BOOL_TRUE; }
 "false"         { MYECHO; yylval.LString.l = LEXLINECOUNTER; return BOOL_FALSE; }
 {intconst}      { MYECHO; 
-                  yylval.LString.s = (char *) malloc ( strlen(yytext) ); 
+                  yylval.LString.s = myTextCopy();
                   yylval.LString.l = LEXLINECOUNTER;
-                  strcpy( yylval.LString.s, yytext ); 
                   return INTEGER_CONSTANT;
                 }
 {floatconst}    { MYECHO; 
-                  yylval.LString.s = (char *) malloc ( strlen(yytext) ); 
+                  yylval.LString.s = myTextCopy();
                   yylval.LString.l = LEXLINECOUNTER;
-                  strcpy( yylval.LString.s, yytext ); 
                   return FLOAT_CONSTANT;
                 }
 {identifier}    { MYECHO; 
-                  yylval.LString.s = (char *) malloc ( strlen(yytext) ); 
+                  yylval.LString.s = myTextCopy();
                   yylval.LString.l = LEXLINECOUNTER;
-                  strcpy( yylval.LString.s, yytext ); 
                   return IDENTIFIER; 
                 }
 {strliteral}    { MYECHO; 
-                  yylval.LString.s = (char *) malloc ( strlen(yytext)+1 ); 
+                  yylval.LString.s = myTextCopy();
                   yylval.LString.l = LEXLINECOUNTER;
-                  strncpy( yylval.LString.s, yytext, strlen(yytext)  ); 
-                  yylval.LString.s[strlen(yytext)]='\0';
                   return STRING_LITERAL; 
                 }
 {comment}       { MYECHO; countLine(yytext); }
@@ -129,6 +125,13 @@ comment         (\/\*([^\*]|(\*+([^\*\/])))*\*+\/)|(\/\/.*)
                 }
 
 %%
+
+char * myTextCopy() {
+    char * cpy = (char *) malloc (yyleng+1);
+    strncpy( cpy, yytext, yyleng );
+    cpy[yyleng] = '\0';
+    return cpy;
+}
 
 void countLine(const char* ptr) {
     int i;
