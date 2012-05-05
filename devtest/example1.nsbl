@@ -1,18 +1,18 @@
 //int x=0, y=0;
 
-//vertex v1,v2,v3,v4,v5;
-edge e1; // ,e2,e3,e4;
-//vlist lv = [v1,v2,v3,v4];
-//elist le = [e1,e2,e3];
+vertex v1,v2,v3,v4,v5;
+edge e1,e2,e3,e4;
+vlist lv = [v1,v2,v3,v4];
+elist le = [e1,e2,e3];
 graph g1;
 
-/*
+
 v1.project = "World";
 v2.name = "Friend One";
 v3.name = "Friend One";
 print << v1 << v2 << v3;
 v4.name = "Friend four";
-print << v4;*/
+print << v4;
 
 e1.rel = "says";
 print << e1;
