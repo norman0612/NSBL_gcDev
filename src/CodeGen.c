@@ -416,8 +416,9 @@ char * allFreeCodeInScope(ScopeId sid, GList * gl, ScopeId lvl) {
     char * telc = codeForFreeDerivedVabInScope( sid, ELIST_T, gl, lvl, 1 );
     char * tatt = codeForFreeDerivedVabInScope( sid, DYN_ATTR_T, gl, lvl, 1 );
 
-    char * rlt = strCatAlloc("", 13, sc, vc, ec, gc, vlc, elc,
-                    tsc, tvc, tec, tgc, tvlc, telc, tatt );
+    char * rlt = strCatAlloc("", 13, 
+            tatt, sc, tsc, vlc, elc, tvlc, telc, 
+                ec, tec, vc, tvc, gc, tgc);
     free(sc);free(vc);free(ec);free(gc);free(vlc);free(elc);
     free(tsc);free(tvc);free(tec);free(tgc);free(tvlc);free(telc);free(tatt);
     return rlt;
@@ -439,8 +440,9 @@ char * allInitTmpVabCodeInScope(ScopeId sid, GList * gl, ScopeId lvl) {
     char * telc = codeForInitTmpVabInScope( sid, ELIST_T, gl, lvl, 1 );
     char * tatt = codeForInitTmpVabInScope( sid, DYN_ATTR_T, gl, lvl, 1);
 
-    char * rlt =  strCatAlloc("", 13, sc, vc, ec, gc, vlc, elc,
-              tsc, tvc, tec,tgc,tvlc,telc,tatt);
+    char * rlt =  strCatAlloc("", 13, 
+            tatt, sc, tsc, vlc, elc, tvlc, telc,
+                ec, tec, vc, tvc, gc, tgc);
 
     free(sc);free(vc);free(ec);free(gc);free(vlc);free(elc);
     free(tsc);free(tvc);free(tec);free(tgc);free(tvlc);free(telc);free(tatt);

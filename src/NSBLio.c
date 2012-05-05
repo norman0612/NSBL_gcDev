@@ -5,6 +5,7 @@
 //function to print string
 void print_STRING_T(GString* s)
 {
+    if(s==NULL) return;
 	printf("%s",s->str);
 }
 

@@ -1,13 +1,13 @@
-int x=0, y=0;
+//int x=0, y=0;
 
-vertex v1,v2,v3,v4,v5;
-edge e1,e2,e3,e4;
-vlist lv = [v1,v2,v3,v4];
-elist le = [e1,e2,e3];
+//vertex v1,v2,v3,v4,v5;
+edge e1; // ,e2,e3,e4;
+//vlist lv = [v1,v2,v3,v4];
+//elist le = [e1,e2,e3];
 graph g1;
 
-
-/*v1.project = "World";
+/*
+v1.project = "World";
 v2.name = "Friend One";
 v3.name = "Friend One";
 print << v1 << v2 << v3;
@@ -19,11 +19,11 @@ print << e1;
 //e2.rel = e1.rel;
 //e4.rel = "says";
 
-//print << e1.rel<<"\n";
+//print << e1.rel;
 
+g1 <: e1;
 
-/*lv <: v5;
-le <: e4;*/
+le <: e4;
 
 //g1 <: lv;
 g1 <: e1;
@@ -40,7 +40,7 @@ g1 <: e1;
         print << "Hello"<<"\n";
     }
     return;
-}
+}*/
 
-hello();*/
+//hello();
 
