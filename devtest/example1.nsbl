@@ -7,40 +7,40 @@ elist le = [e1,e2,e3];
 graph g1;
 
 
-v1.project = "World";
+/*v1.project = "World";
 v2.name = "Friend One";
 v3.name = "Friend One";
 print << v1 << v2 << v3;
 v4.name = "Friend four";
-print << v4;
+print << v4;*/
 
 e1.rel = "says";
 print << e1;
-e2.rel = e1.rel;
-e4.rel = "says";
+//e2.rel = e1.rel;
+//e4.rel = "says";
 
-print << e1.rel;
+//print << e1.rel<<"\n";
 
 
-lv <: v5;
-le <: e4;
+/*lv <: v5;
+le <: e4;*/
 
-g1 <: lv;
-g1 <: le;
-void hello() {
+//g1 <: lv;
+g1 <: e1;
+/*void hello() {
     vertex vtemp;
     edge etemp;
-    int i = 0;
-    int l = 10;
-    for (i; i<l; i=i+1) {
+    int i = 1;
+    int l = 3;
+    for (i; i<3; i=i+1) {
         vtemp = lv[i];
         etemp = le[i-1];
-        print << vtemp.name;
-        print << etemp.rel;
-        print << "Hello";
+        print << vtemp.name<<" ";
+        print << etemp.rel<<":";
+        print << "Hello"<<"\n";
     }
-	return;
+    return;
 }
 
-hello();
+hello();*/
 

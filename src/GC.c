@@ -46,7 +46,7 @@ GC_Entry * GC_New_Entry( GHashTable * GChash, void * ptr, int type ){
 int GC_Ref( GHashTable * GChash, void * ptr, int type ) {
     GC_Entry *gce = (GC_Entry *) g_hash_table_lookup( GChash, ptr );
     if (gce == NULL) gce = GC_New_Entry( GChash, ptr, type );
-//    GC_Out( GChash, stdout );
+    GC_Out( GChash, stdout );
     return ++gce->nref;
 }
     
