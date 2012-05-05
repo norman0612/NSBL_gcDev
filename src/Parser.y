@@ -825,6 +825,8 @@ void main_init(char * fileName) {
     maxLevel = 0;
     inLoop = 0;
     inFunc = -1;
+    inFuncLiteral = -1;
+    isFunc = 0;
     inMATCH = 0;
     existMATCH = 0;
     matchStaticVab = NULL;
@@ -832,7 +834,9 @@ void main_init(char * fileName) {
     frontDeclExpTmp1 = NULL;
 	existPIPE = 0;
     returnList = NULL;
+    returnList2 = NULL;
     noReturn = NULL;
+    noReturn2 = NULL;
     FuncParaList = NULL;
     OUTFILE = strCatAlloc("",2,fileName,".c");
 }

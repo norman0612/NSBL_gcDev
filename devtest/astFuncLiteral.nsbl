@@ -7,13 +7,14 @@ int ff() {
 	edge e3,e4;
 	e3.weight = 3;
     int ffvar;
-    func xx():void = {};
+    func xx():void = {return;};
 	string s4, s5="test s5";
 	int castv = 15.6;
 	elist le = [e3, e4];
 	le<:e4;
 	return 0;
 }
+
 
 graph g1, g2;
 edge e1, e2;

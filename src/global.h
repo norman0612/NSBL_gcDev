@@ -29,7 +29,7 @@ extern FILE* ERRORIO;
 extern char * OUTFILE;
 extern FILE * OUTFILESTREAM;
 extern char ** INDENT;
-extern int  inLoop, inFunc, inMATCH, existMATCH, nMATCHsVab, existPIPE;
-extern GList *returnList, *noReturn, *FuncParaList;
+extern int  inLoop, inFunc, inFuncLiteral, isFunc, inMATCH, existMATCH, nMATCHsVab, existPIPE;
+extern GList *returnList, *noReturn, *FuncParaList, *returnList2, *noReturn2;
 extern char * matchStaticVab, *frontDeclExp, *frontDeclExpTmp1;
 #endif

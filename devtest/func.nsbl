@@ -10,6 +10,6 @@ int b() {
 }
 
 func a():bool = {
-    func b():bool = { return false; };
+//    func b():bool = { return false; };
     return true;
 };
