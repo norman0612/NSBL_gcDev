@@ -33,7 +33,8 @@ e5:v5->v2;
 
 e1.level = 4;
 e2.level = 2;
-e3.level = 6;.level = 1;
+e3.level = 6;
+e4.level = 1;
 e5.level = 9;
 
 
@@ -52,11 +53,8 @@ for(v0.i = 0; v0.i<5; v0.i = v0.i+1){
 	elist el_in_for;
 	el_in_for = vl1|outE?[@level>v0.i];
 	print << "leves greater than: "<<v0.i<<"\n";
-	foreach(edge et : el_in_for) print <<et;
+	foreach(edge et : el_in_for) {print <<et;}
 	print <<"END=========\n";
-	del el_in_for;
 }
 
 
-//del v0, v1, v2, v3, v4, v5;
-//del vl1, vl2, vl3, vl4, el1, el2;

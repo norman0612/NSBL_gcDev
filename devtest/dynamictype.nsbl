@@ -1,7 +1,7 @@
 vertex v;
 
-int v::a = 10;
-float v::b = 3;
+v.a = 10;
+v.b = 3;
 
 v.a = v.b* v.a;
 
@@ -11,8 +11,7 @@ int ii;
 int jj = ii = v.a + v.b*j  + k;
 
 bool f = true, ff;
-
-if (v.a > 10 && ! ((bool) v.f) )  {
+if (v.a > 10 &&  f )  {
 
 }
 
@@ -22,7 +21,9 @@ v.a = v.a + 1;
 }
 for (v.a = 0; v.a < 10; v.a = v.a + 1) {}
 
+/*
 v.xxx = 19;
 
 if ( ( ii = v.b + v.a ) > v.xxx ) {
 }
+*/

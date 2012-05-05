@@ -1434,7 +1434,8 @@ int codeGen (struct Node * node) {
 			frontDeclExp = frontDeclExpTmp1; frontDeclExpTmp1 = NULL;
 			node->code = codeFrontDecl(node->scope[0] );
             inLoop++;
-            LoopBody = rt->child[0]; LoopGotoLabel = label;
+            LoopBody = ( rt->nch == 0 ) ? NULL: rt->child[0];
+            LoopGotoLabel = label;
             codeGen(rt); 
             LoopBody = NULL; LoopGotoLabel = NULL;
             inLoop--;
@@ -1481,7 +1482,9 @@ int codeGen (struct Node * node) {
 			codeGen(f3); cf3 = frontDeclExp; frontDeclExp = NULL;
 			frontDeclExp = frontDeclExpTmp1; frontDeclExpTmp1 = NULL;
             node->code = codeFrontDecl(node->scope[0] );
-            inLoop++; LoopBody = fs->child[0]; LoopGotoLabel = label;
+            inLoop++; 
+            LoopBody = ( fs->nch == 0 ) ? NULL: fs->child[0]; 
+            LoopGotoLabel = label;
             codeGen(fs); 
             LoopBody = NULL; inLoop--; LoopGotoLabel = NULL;
             if (f1->type>=0 && f2->type>=0 && f3->type>=0){
