@@ -1,5 +1,5 @@
-#ifndef NSBL_IO_H_NSBL
-#define NSBL_IO_H_NSBL
+#ifndef FILEREADWRITE_H_NSBL
+#define FILEREADWRITE_H_NSBL
 
 
 #include "../mxmldir/mxml.h"

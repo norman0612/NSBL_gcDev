@@ -17,7 +17,6 @@ char * opMacro(int ma);
 char * DynOP(int ma);
 char * typeMacro(int t);
 char * assignFunc(int t);
-char * tmpAttr();
 char * gotolabel();
 char * tmpReturnTmp();
 char * tmpMatch();

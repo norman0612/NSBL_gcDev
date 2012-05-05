@@ -25,7 +25,7 @@ comment         (\/\*([^\*]|(\*+([^\*\/])))*\*+\/)|(\/\/.*)
 
 %%
 "void"          { MYECHO; yylval.LString.l = LEXLINECOUNTER; return VOID; }
-"bool"|"boolean"       { MYECHO; yylval.LString.l = LEXLINECOUNTER; return BOOLEAN; }
+"bool"|"boolean" { MYECHO; yylval.LString.l = LEXLINECOUNTER; return BOOLEAN; }
 "int"           { MYECHO; yylval.LString.l = LEXLINECOUNTER; return INTEGER; }
 "float"         { MYECHO; yylval.LString.l = LEXLINECOUNTER; return FLOAT; }
 "string"        { MYECHO; yylval.LString.l = LEXLINECOUNTER; return STRING; }
@@ -35,7 +35,7 @@ comment         (\/\*([^\*]|(\*+([^\*\/])))*\*+\/)|(\/\/.*)
 "edge"          { MYECHO; yylval.LString.l = LEXLINECOUNTER; return EDGE; }
 "graph"         { MYECHO; yylval.LString.l = LEXLINECOUNTER; return GRAPH; }
 
-"func"			{ MYECHO; yylval.LString.l = LEXLINECOUNTER; return FUNC_LITERAL; }
+"func"          { MYECHO; yylval.LString.l = LEXLINECOUNTER; return FUNC_LITERAL; }
 "if"            { MYECHO; yylval.LString.l = LEXLINECOUNTER; return IF; }
 "else"          { MYECHO; yylval.LString.l = LEXLINECOUNTER; return ELSE; }
 "for"           { MYECHO; yylval.LString.l = LEXLINECOUNTER; return FOR; }
@@ -44,7 +44,7 @@ comment         (\/\*([^\*]|(\*+([^\*\/])))*\*+\/)|(\/\/.*)
 "break"         { MYECHO; yylval.LString.l = LEXLINECOUNTER; return BREAK; }
 "continue"      { MYECHO; yylval.LString.l = LEXLINECOUNTER; return CONTINUE; }
 "return"        { MYECHO; yylval.LString.l = LEXLINECOUNTER; return RETURN; }
-"mark"			{ MYECHO; yylval.LString.l = LEXLINECOUNTER; return MARK; }
+"mark"          { MYECHO; yylval.LString.l = LEXLINECOUNTER; return MARK; }
 
 "outE"          { MYECHO; yylval.LString.l = LEXLINECOUNTER; return OUTCOMING_EDGES; }
 "inE"           { MYECHO; yylval.LString.l = LEXLINECOUNTER; return INCOMING_EDGES; }
@@ -53,7 +53,7 @@ comment         (\/\*([^\*]|(\*+([^\*\/])))*\*+\/)|(\/\/.*)
 "allV"          { MYECHO; yylval.LString.l = LEXLINECOUNTER; return ALL_VERTICES; }
 "allE"          { MYECHO; yylval.LString.l = LEXLINECOUNTER; return ALL_EDGES; }
 
-"print"		    { MYECHO; yylval.LString.l = LEXLINECOUNTER; return PRINT;}
+"print"         { MYECHO; yylval.LString.l = LEXLINECOUNTER; return PRINT;}
 "length"        { MYECHO; yylval.LString.l = LEXLINECOUNTER; return LENGTH;}
 
 "=="            { MYECHO; yylval.LString.l = LEXLINECOUNTER; return EQ; }
@@ -91,9 +91,8 @@ comment         (\/\*([^\*]|(\*+([^\*\/])))*\*+\/)|(\/\/.*)
 "="             { MYECHO; yylval.LString.l = LEXLINECOUNTER; return '='; }
 ">"             { MYECHO; yylval.LString.l = LEXLINECOUNTER; return GT; }
 "<"             { MYECHO; yylval.LString.l = LEXLINECOUNTER; return LT; }
-"del"           { MYECHO; yylval.LString.l = LEXLINECOUNTER; return DEL; }
-"<<"		    { MYECHO; yylval.LString.l = LEXLINECOUNTER; return LIN;}
-">>"		    { MYECHO; yylval.LString.l = LEXLINECOUNTER; return ROUT;}
+"<<"            { MYECHO; yylval.LString.l = LEXLINECOUNTER; return LIN;}
+">>"            { MYECHO; yylval.LString.l = LEXLINECOUNTER; return ROUT;}
 
 "true"          { MYECHO; yylval.LString.l = LEXLINECOUNTER; return BOOL_TRUE; }
 "false"         { MYECHO; yylval.LString.l = LEXLINECOUNTER; return BOOL_FALSE; }

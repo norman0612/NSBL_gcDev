@@ -1,5 +1,5 @@
-#ifndef GLOBAL_H__JZ__12345
-#define GLOBAL_H__JZ__12345
+#ifndef GLOBAL_H_NSBL_
+#define GLOBAL_H_NSBL_
 #include <stdio.h>
 #include "SymbolTable.h"
 
@@ -25,7 +25,7 @@ extern int                     maxLevel;
 extern int ERRNO;
 extern FILE* ERRORIO;
 
-/** code */
+/** code Generation */
 extern char * OUTFILE;
 extern FILE * OUTFILESTREAM;
 extern char ** INDENT;

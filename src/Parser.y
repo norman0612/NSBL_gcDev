@@ -2,11 +2,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-extern FILE *yyin; /* Input for yacc parser. */
-extern void yyerror(const char *str); /* Our version. */
-extern int yywrap(void); /* Our version. */
-extern int yylex(void); /* Lexical analyzer function. */
-extern int yyparse(void); /* Parser function. */
+extern FILE *yyin; 
+extern void yyerror(const char *str); 
+extern int yywrap(void); 
+extern int yylex(void); 
+extern int yyparse(void); 
 
 #include "ASTree.h"
 #include "SymbolTable.h"
@@ -47,14 +47,13 @@ extern int yyparse(void); /* Parser function. */
 %type <LString> VOID BOOLEAN INTEGER FLOAT STRING VLIST ELIST VERTEX EDGE GRAPH
 %type <LString> FUNC_LITERAL
 %type <LString> IF ELSE FOR FOREACH WHILE BREAK CONTINUE RETURN MARK
-%type <LString> '{' '}' '(' ')' '[' ']' ';' ',' ':' '.' '?' DEL LENGTH 
+%type <LString> '{' '}' '(' ')' '[' ']' ';' ',' ':' '.' '?' LENGTH 
 // declaration
 %type <node> declaration
 %type <node> basic_type_specifier declaration_specifiers 
 %type <node> init_declarator_list init_declarator simple_declarator
 %type <node> parameter_list parameter_declaration
 %type <node> initializer initializer_list
-%type <node> del_declarator del_declarator_list deletion
 
 // expression
 %type <node> expression assignment_expression logical_OR_expression 
@@ -67,7 +66,7 @@ extern int yyparse(void); /* Parser function. */
 // statments
 %type <node> start_nonterminal translation_unit
 %type <node> external_statement statement 
-%type <node> expression_statement compound_statement selection_statement compound_statement_no_scope deletion_statement 
+%type <node> expression_statement compound_statement selection_statement compound_statement_no_scope 
 %type <node> iteration_statement jump_statement declaration_statement
 %type <node> statement_list foreach_declaration
 %type <node> io_statement io_ext io_ext_list
@@ -105,8 +104,6 @@ extern int yyparse(void); /* Parser function. */
 %token FOR FOREACH WHILE
 %token BREAK CONTINUE
 %token RETURN
-/* del */
-%token DEL
 /* used in AST */
 %token AST_TYPE_SPECIFIER AST_DECLARATION AST_COMMA
 %token AST_ASSIGN AST_CAST
@@ -123,7 +120,7 @@ extern int yyparse(void); /* Parser function. */
 %token AST_FUNC_CALL AST_ARG_EXPS AST_EXP_STAT
 %token AST_ERROR AST_LIST_MEMBER
 %token AST_PRINT AST_PRINT_COMMA AST_PRINT_STAT AST_READ_GRAPH AST_WRITE_GRAPH
-%token AST_DEL_ATTRIBUTE AST_LENGTH AST_SCOPE_OUT
+%token AST_LENGTH AST_SCOPE_OUT
 /**************************
  *  PRECEDENCE & ASSOC    *
  **************************/
@@ -145,12 +142,13 @@ start_nonterminal
         $$ = $1;
         showASTandST($$,"Syntax + Semantic P1");
         if(!ERRNO) {// no syntax error, or declaration error
-            char *mainBodyCode=NULL, *funCode=NULL,*mainCode;
+            char *mainBodyCode=NULL, *mainCode;
+            char *funCode=NULL,*flCode=NULL;
             char *globalDecl=NULL;
             codeInclude(&globalDecl);
             codeIndentInit();
             codeAllGen($$, &mainBodyCode, &funCode);
-            codeAllFuncLiteral($$, &funCode);
+            codeAllFuncLiteral($$, &flCode);
             codeAllGlobal($$,&globalDecl);
             mainCode = wapperMainCode(mainBodyCode);        
             codeIndentFree();
@@ -158,6 +156,7 @@ start_nonterminal
             if(!ERRNO){
                 OUTFILESTREAM = fopen(OUTFILE,"w");
                 if(globalDecl!=NULL) exportCode(globalDecl);    // global
+                if(flCode!=NULL) exportCode(flCode);            // fl
                 if(funCode!=NULL) exportCode(funCode);          // func
                 exportCode(mainCode);                           // main
                 fclose(OUTFILESTREAM);
@@ -167,8 +166,7 @@ start_nonterminal
             free(mainCode);
             free(globalDecl);
         }
-        astFreeTree($$);            // destroy AST
-        
+        astFreeTree($$);            // destroy AST 
     }
     ;
 
@@ -201,8 +199,7 @@ statement
     | iteration_statement           { $$ = $1; }
     | jump_statement                { $$ = $1; }
     | declaration_statement         { $$ = $1; }
-    | deletion_statement            { $$ = $1; }
-    | io_statement		            { $$ = $1; }	
+    | io_statement                    { $$ = $1; }    
     ;
 
 expression_statement
@@ -298,10 +295,10 @@ iteration_statement
     ;
 
 foreach_declaration
-	: basic_type_specifier IDENTIFIER {
-		$$ = astNewNode(AST_DECLARATION, 2, astAllChildren(2, $1, astNewLeaf(IDENTIFIER, $2.s, $2.l)), $2.l);
-		sTableDeclare($$);
-	}
+    : basic_type_specifier IDENTIFIER {
+        $$ = astNewNode(AST_DECLARATION, 2, astAllChildren(2, $1, astNewLeaf(IDENTIFIER, $2.s, $2.l)), $2.l);
+        sTableDeclare($$);
+    }
 
 jump_statement
     : BREAK ';'                         {$$ = astNewNode(AST_JUMP_BREAK, 0, NULL, $1.l);}
@@ -319,15 +316,11 @@ declaration_statement
     | function_literal_declaration      { $$ = $1; }
     ;
 
-deletion_statement
-    : deletion                          { $$ = $1; }
-    ;
-
 io_statement
     : PRINT io_ext_list ';' {
         $$ =  astNewNode(AST_PRINT_STAT, 1, astAllChildren(1, $2), $1.l); 
     }
-    | IDENTIFIER LIN IDENTIFIER ';'	
+    | IDENTIFIER LIN IDENTIFIER ';'    
     {
         // FILE << Graph
         struct Node* tn1 = astNewLeaf(IDENTIFIER, $1.s, $1.l);
@@ -344,7 +337,7 @@ io_statement
         sTableLookupId(tn3);
         $$ = astNewNode(AST_READ_GRAPH, 2, astAllChildren(2, tn1, tn3), $2.l);
     } 
-    ;	
+    ;    
 
 io_ext_list
     : io_ext                        { $$ = $1; }
@@ -471,16 +464,10 @@ postfix_expression
     | IDENTIFIER '(' argument_expression_list ')' {
         struct Node* tn = astNewLeaf(IDENTIFIER, $1.s, $1.l);
         $$ = astNewNode(AST_FUNC_CALL, 2, astAllChildren(2, tn, $3), tn->line);
-        //$$->typeCon = astTypeConArgList($3,NULL);   // type construct for arguments
-        //sTableLookupFunc($$);                       // Lookup this func
-        //astFreeTypeCon($$->typeCon);
     }
     | IDENTIFIER '(' ')' {
         struct Node* tn = astNewLeaf(IDENTIFIER, $1.s, $1.l);
         $$ = astNewNode(AST_FUNC_CALL, 1, astAllChildren(1, tn), tn->line);
-        //$$->typeCon = astTypeConArgList(NULL, NULL);    // empty
-        //sTableLookupFunc($$);
-        //astFreeTypeCon($$->typeCon);
     }
     | postfix_expression PIPE pipe_property {
         $$ = astNewNode ( PIPE, 2, astAllChildren(2, $1, $3), $2.l );
@@ -648,16 +635,6 @@ declaration
     }
     ;
 
-deletion
-    : DEL del_declarator_list ';' {
-        $$ = astNewNode( DEL, 1, astAllChildren(1, $2), $1.l);
-    }
-    | DEL del_declarator_list error {
-        astFreeTree($2);
-        $$ = NULL;
-    }
-    ;
-
 declaration_specifiers
     : basic_type_specifier {
         $$= $1;
@@ -679,33 +656,6 @@ init_declarator
     }
     | simple_declarator '=' initializer {
         $$ = astNewNode( AST_ASSIGN, 2, astAllChildren(2, $1, $3), $2.l );
-    }
-    ;
-
-del_declarator_list
-    : del_declarator    { $$ = $1; }
-    | del_declarator_list ',' del_declarator {
-        $$ = astNewNode( AST_COMMA, 2, astAllChildren(2, $1, $3), $2.l );
-    }
-    ;
-
-del_declarator
-    : IDENTIFIER { 
-        $$ = astNewLeaf(IDENTIFIER, $1.s, $1.l);
-        sTableLookupId($$); 
-    }
-    | IDENTIFIER '.' IDENTIFIER {
-        struct Node* tnode = astNewLeaf(IDENTIFIER, $1.s, $1.l); 
-        sTableLookupId(tnode);    // check the exsitence of object
-        if(tnode->type<=FLOAT_T || tnode->type>=FUNC_T) {
-            ERRNO = ErrorDelAttrFromWrongType; 
-            errorInfo(ERRNO,tnode->line,"del an attribute from an object of type `%s'.\n",sTypeName(tnode->type) );
-        }
-        $$ = astNewNode( AST_DEL_ATTRIBUTE, 2, astAllChildren(2, tnode, astNewLeaf(IDENTIFIER, $3.s, $3.l)), $2.l );
-        // set lexval for ID2
-        char * ctmp = $$->child[1]->lexval.sval;
-        $$->child[1]->lexval.sval = strCatAlloc("", 2, "::", ctmp);
-        free(ctmp);
     }
     ;
 
@@ -832,7 +782,7 @@ void main_init(char * fileName) {
     matchStaticVab = NULL;
     frontDeclExp = NULL;
     frontDeclExpTmp1 = NULL;
-	existPIPE = 0;
+    existPIPE = 0;
     returnList = NULL;
     returnList2 = NULL;
     noReturn = NULL;

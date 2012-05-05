@@ -21,8 +21,8 @@ struct Node* ast_new_leaf(int token, void * ptr, long long line) {
     node->line = line;              // line # in source
     node->code = NULL;              // no code assigned
     node->codetmp = NULL;
-    node->scope[0] = sStackLevel;
-    node->scope[1] = sStackTopId;
+    node->scope[0] = sStackLevel;   // scope Level
+    node->scope[1] = sStackTopId;   // scope ID
     node->tmp[0] = 0;
     switch (token) {
         case INTEGER_CONSTANT :
@@ -105,12 +105,6 @@ struct Node** ast_all_children(int n, ...){
 
 struct Node* ast_new_node(int token, int nch, struct Node** child, long long line){
     struct Node* node = (struct Node *) malloc ( sizeof (struct Node) );  // free in ast_free_tree
-/*	if(token==BELONG && 0){   // not used 
-		char* temp = strCatAlloc("", 3, child[1]->lexval.sval, "_", child[0]->lexval.sval);
-		//child[1]->code = child[1]->lexval.sval;
-		child[1]->lexval.sval = temp;
-        
-	}*/
 
     node->token = token;
     node->type = UNKNOWN_T;             // default
@@ -232,8 +226,8 @@ void ast_output_node(struct Node* node, FILE* out, const char * sep) {
             fprintf(out, "Node<MUL_ASSIGN>");break;
         case DIV_ASSIGN :
             fprintf(out, "Node<DIV_ASSIGN>");break;
-		case APPEND :
-			fprintf(out, "Node<APPEND>");break;
+        case APPEND :
+            fprintf(out, "Node<APPEND>");break;
         case OR :
             fprintf(out, "Node<OR>");break;
         case AND :
@@ -284,62 +278,60 @@ void ast_output_node(struct Node* node, FILE* out, const char * sep) {
             fprintf(out, "Node<COMP_STAT_NO_SCOPE>");break;
         case AST_EXT_STAT_COMMA :
             fprintf(out, "Node<EXT_STAT_COMMA>");break;
-		case AST_FUNC :
-			fprintf(out, "Node<FUNCTION>" );break;
-		case FUNC_LITERAL:
-			fprintf(out, "Node<FUNC_LITERAL>" );break;
-		case AST_IF_STAT :
-			fprintf(out, "Node<IF_STAT>");break;
-		case AST_IFELSE_STAT :
-			fprintf(out, "Node<IFELSE_STAT>");break;
-		case AST_WHILE :
-			fprintf(out, "Node<WHILE_STAT>");break;
-		case AST_FOREACH :
-			fprintf(out, "Node<FOREACH_STAT>");break;
-		case AST_FOR :
-			fprintf(out, "Node<FOR_STAT>");break;
-		case AST_JUMP_CONTINUE:
-			fprintf(out, "Node<CONTINUE>");break;
-		case AST_JUMP_BREAK:
-			fprintf(out, "Node<BREAK>");break;
-		case AST_JUMP_RETURN:
-			fprintf(out, "Node<RETRUN>");break;
-		case AST_FUNC_CALL:
-			fprintf(out, "Node<FUNC_CALL>  :");
+        case AST_FUNC :
+            fprintf(out, "Node<FUNCTION>" );break;
+        case FUNC_LITERAL:
+            fprintf(out, "Node<FUNC_LITERAL>" );break;
+        case AST_IF_STAT :
+            fprintf(out, "Node<IF_STAT>");break;
+        case AST_IFELSE_STAT :
+            fprintf(out, "Node<IFELSE_STAT>");break;
+        case AST_WHILE :
+            fprintf(out, "Node<WHILE_STAT>");break;
+        case AST_FOREACH :
+            fprintf(out, "Node<FOREACH_STAT>");break;
+        case AST_FOR :
+            fprintf(out, "Node<FOR_STAT>");break;
+        case AST_JUMP_CONTINUE:
+            fprintf(out, "Node<CONTINUE>");break;
+        case AST_JUMP_BREAK:
+            fprintf(out, "Node<BREAK>");break;
+        case AST_JUMP_RETURN:
+            fprintf(out, "Node<RETRUN>");break;
+        case AST_FUNC_CALL:
+            fprintf(out, "Node<FUNC_CALL>  :");
             if(node->symbol!=NULL) fprintf(out, "bind = %s", node->symbol->bind);
             break;
-		case ALL_VERTICES :
-			fprintf(out, "Node<ALL_VERTICES>");break;
-		case OUTCOMING_EDGES :
-			fprintf(out, "Node<OUTEDGES>");break;
-		case STARTING_VERTICES :
-			fprintf(out, "Node<STARTING_VERTICES>");break;
-		case ENDING_VERTICES :
-			fprintf(out, "Node<ENDING_VERTICES>");break;
-		case ALL_EDGES :
-			fprintf(out, "Node<ALL_EDGES>");break;
-		case INCOMING_EDGES:
-			fprintf(out, "Node<INCOMING_EDGES>");break;
-		case AT :
-			fprintf(out, "Node<AT_ATTRIBUTE>");break;
+        case ALL_VERTICES :
+            fprintf(out, "Node<ALL_VERTICES>");break;
+        case OUTCOMING_EDGES :
+            fprintf(out, "Node<OUTEDGES>");break;
+        case STARTING_VERTICES :
+            fprintf(out, "Node<STARTING_VERTICES>");break;
+        case ENDING_VERTICES :
+            fprintf(out, "Node<ENDING_VERTICES>");break;
+        case ALL_EDGES :
+            fprintf(out, "Node<ALL_EDGES>");break;
+        case INCOMING_EDGES:
+            fprintf(out, "Node<INCOMING_EDGES>");break;
+        case AT :
+            fprintf(out, "Node<AT_ATTRIBUTE>");break;
         case AST_ARG_EXPS :
             fprintf(out, "Node<ARGUMENT_EXP>");break;
         case AST_EXP_STAT :
             fprintf(out, "Node<EXP_STAT>");break;
         case AST_ERROR :
             fprintf(out, "Node<ERROR>");break;
-        case DEL :
-            fprintf(out, "Node<DEL>");break;
-	    case AST_PRINT :
-	        fprintf(out, "Node<AST_PRINT>");break;
+        case AST_PRINT :
+            fprintf(out, "Node<AST_PRINT>");break;
         case AST_PRINT_COMMA :
             fprintf(out, "Node<AST_PRINT_COMMA>");break;
-	    case AST_PRINT_STAT :
- 	        fprintf(out, "Node<AST_PRINT_STAT>");break;	
-	    case AST_READ_GRAPH :
-	        fprintf(out, "Node<AST_READ_GRAPH>");break;
-	    case AST_WRITE_GRAPH :
-	        fprintf(out, "Node<AST_WRITE_GRAPH>");break;
+        case AST_PRINT_STAT :
+             fprintf(out, "Node<AST_PRINT_STAT>");break;    
+        case AST_READ_GRAPH :
+            fprintf(out, "Node<AST_READ_GRAPH>");break;
+        case AST_WRITE_GRAPH :
+            fprintf(out, "Node<AST_WRITE_GRAPH>");break;
         case AST_LIST_MEMBER :
             fprintf(out, "Node<AST_LIST_MEMBER>");break;
         case AST_LENGTH :
@@ -359,11 +351,11 @@ void ast_output_node(struct Node* node, FILE* out, const char * sep) {
 /** preorder output */
 void ast_output_tree(struct Node* node, FILE* out, int level) {
     int i;
-	int indent = level;
+    int indent = level;
     if(node == NULL) return;
-	while(indent-->0){
-		fprintf(out, "  ");
-	}
+    while(indent-->0){
+        fprintf(out, "  ");
+    }
     fprintf(out, "Tree<%d>::",level);
     ast_output_node(node, out, "\n");
     for(i=0; i<node->nch; ++i) {

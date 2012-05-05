@@ -22,7 +22,7 @@
 #define ErrorListMixedType								+25
 #define ErrorEdgeAssignExpression						+26
 
-// semantic 51-80
+// semantic 51-100
 #define ErrorIdentifierAlreadyDeclared                  +51
 #define ErrorIdentifierUsedBeforeDeclaration            +52
 #define ErrorFunctionCalledBeforeDeclaration            +53
@@ -52,8 +52,6 @@
 #define ErrorInitDerivedType                            +77
 #define ErrorPrintWrongType                             +78
 #define ErrorNestedFuncLiteralInFuncLiteral             +79
-
-
 #define ErrorCallBreakOutsideOfLoop                     +80
 #define ErrorCallContinueOutsideOfLoop                  +81
 #define ErrorCallReturnOutsideOfFunc                    +82

@@ -35,8 +35,8 @@ struct Node {
     val_t               lexval;         // store lexeme value
     SymbolTableEntry*   symbol;         // default NULL
     long long           line;           // # line in source
-    char*               code;           // three-address code
-    char*               codetmp;        
+    char*               code;           // target code
+    char*               codetmp;        // target code in c's global
     ScopeId             scope[2];       // scopeLevel, scopeId
     int                 tmp[10];        // temp storage
 };

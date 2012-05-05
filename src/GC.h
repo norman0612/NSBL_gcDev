@@ -5,9 +5,9 @@
 #include <stdio.h>
 
 typedef struct {
-    void * ptr;
-    int nref;
-    int type;
+    void * ptr;         //  object pointer
+    int nref;           //  number of references
+    int type;           //  type of object
 } GC_Entry;
 
 extern GHashTable * GCH;
@@ -18,6 +18,8 @@ int GC_Ref( GHashTable * GChash, void * ptr, int type );
 int GC_Deref( GHashTable * GChash,  void * ptr, int type );
 void GC_Out( GHashTable * GChash, FILE * out );
 
+
+// IMPORTANT : use this wrapper
 #define gcInit()            init_GC( &GCH )
 #define gcDel()             del_GC( GCH )
 #define gcRef(p,t)          GC_Ref( GCH, p, t )

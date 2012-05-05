@@ -145,6 +145,7 @@ SymbolTableEntry* sTableTryLookupId(struct Node* node) {
         id = sStackDown();
     }
 	if (entry == NULL) {
+        // disable error report here
 //		printf("key= '%s'\n", key);
 //		sTableShow(stderr);
 	}

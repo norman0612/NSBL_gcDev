@@ -6,11 +6,6 @@
 extern FILE* DEBUGIO;
 #endif
 
-/************************************************
- * global variables (see SymbolTable.h)         *
- * - s_table                                    *
- * - s_stack                                    *
- ************************************************/
 /** Global Variables */
 SymbolTable*            s_table;
 SymbolTableStack*       s_stack;

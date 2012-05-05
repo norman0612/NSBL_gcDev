@@ -193,13 +193,6 @@ char * assignFunc(int t) {
     }
 }
 
-char * tmpAttr() {
-    static char tmp[128];
-    static int i = 0;
-    sprintf(tmp,"_tmp_attr_%d\0", i++);
-    return tmp;
-}
-
 char * gotolabel() {
     static char tmp[128];
     static int i = 0;
