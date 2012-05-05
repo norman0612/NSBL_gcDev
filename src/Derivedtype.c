@@ -241,8 +241,10 @@ int destroy_list(ListType* list){
 }
 
 int destroy_string(StringType* s){
-	if(s == NULL)
-		return 0;
+	if(s == NULL)return 0;
+    // GC
+    int nref;
+    if ( (nref = gcDef( (void *) s, STRING_T )) > 0) return nref;
 	g_string_free((GString*)s, 1);
 	return 0;
 }
@@ -1474,10 +1476,7 @@ Attribute* object_get_attribute(void* v, int obj, char* attribute, int autoNew, 
 	return attr;
 }
 
-StringType*	assign_operator_string(StringType** s1, StringType* s2) {
-    if (s1 != NULL) destroy_string(*s1);
-    return (*s1 = s2);
-}
+
 
 ListType* list_match(ListType* l, bool (*func) (void*, int), int rm_l){
 	if(l==NULL)
@@ -1566,4 +1565,10 @@ Attribute*          assign_operator_attr(Attribute** a1, Attribute* a2) {
     if (*a1 != NULL) gcDef(*a1, DYN_ATTR_T);
     gcRef(a2, DYN_ATTR_T);
     return *a1 = a2;
+}
+
+StringType*	assign_operator_string(StringType** s1, StringType* s2) {
+    if (*s1 != NULL) gcDef(*s1, STRING_T);
+    gcRef(s2, STRING_T);
+    return (*s1 = s2);
 }

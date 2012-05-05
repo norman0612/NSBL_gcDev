@@ -50,6 +50,7 @@
 #define ErrorGetLengthForTypeNotList                    +75
 #define ErrorIllegalDerivedTypeDeclaration              +76
 #define ErrorInitDerivedType                            +77
+#define ErrorPrintWrongType                             +78
 
 
 #define ErrorCallBreakOutsideOfLoop                     +80
