@@ -4,10 +4,9 @@ int b() {
     vertex v;
     v.a = 10;
     v.b = 20.;
-    if (c>0)
-        return (int) (v.a+v.b) ;
-    else
-        return (int) c;
+    if (c>0){
+        return (int) (v.a+v.b) ;}
+    else{ return (int) c;}
 }
 
 func a():bool = {
