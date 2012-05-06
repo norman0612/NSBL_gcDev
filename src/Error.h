@@ -18,11 +18,11 @@
 
 // syntax 21-50
 #define ErrorSyntax                                     +21
-#define ErrorAttributeDeclaration						+22
-#define ErrorDerivedTypeDeclaration						+23
-#define ErrorAssignmentExpression						+24
-#define ErrorListMixedType								+25
-#define ErrorEdgeAssignExpression						+26
+#define ErrorAttributeDeclaration                       +22
+#define ErrorDerivedTypeDeclaration                     +23
+#define ErrorAssignmentExpression                       +24
+#define ErrorListMixedType                              +25
+#define ErrorEdgeAssignExpression                       +26
 
 // semantic 51-100
 #define ErrorIdentifierAlreadyDeclared                  +51
@@ -44,8 +44,8 @@
 #define ErrorIfConditionNotBOOL                         +67
 #define ErrorGetMemberForNotListType                    +68
 #define ErrorVoidTypeVariableNotSupported               +69
-#define ErrorPipeWrongType								+70
-#define ErrorForeachType								+71
+#define ErrorPipeWrongType                              +70
+#define ErrorForeachType                                +71
 #define ErrorAssignLeftOperand                          +72
 #define ErrorAssignInMatch                              +73
 #define ErrorWrongArgmentType                           +74
