@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=latex 2012.5.5)  5 MAY 2012 20:17
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=latex 2012.5.5)  5 MAY 2012 22:50
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -360,12 +360,12 @@ Package rerunfilecheck Info: File `appendix.out' has not changed.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 116.
  ) 
 Here is how much of TeX's memory you used:
- 9226 strings out of 493634
- 134694 string characters out of 3150863
- 852148 words of memory out of 3500000
- 12393 multiletter control sequences out of 15000+200000
+ 9224 strings out of 493634
+ 134676 string characters out of 3150863
+ 844476 words of memory out of 3500000
+ 12391 multiletter control sequences out of 15000+200000
  9862 words of font info for 31 fonts, out of 3000000 for 9000
  831 hyphenation exceptions out of 8191
- 35i,6n,49p,316b,1748s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 35i,6n,49p,316b,1754s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on appendix.dvi (104 pages, 5785388 bytes).
+Output written on appendix.dvi (104 pages, 5783052 bytes).

@@ -47,7 +47,6 @@ comment         (\/\*([^\*]|(\*+([^\*\/])))*\*+\/)|(\/\/.*)
 "break"         { MYECHO; yylval.LString.l = LEXLINECOUNTER; return BREAK; }
 "continue"      { MYECHO; yylval.LString.l = LEXLINECOUNTER; return CONTINUE; }
 "return"        { MYECHO; yylval.LString.l = LEXLINECOUNTER; return RETURN; }
-"mark"          { MYECHO; yylval.LString.l = LEXLINECOUNTER; return MARK; }
 
 "outE"          { MYECHO; yylval.LString.l = LEXLINECOUNTER; return OUTCOMING_EDGES; }
 "inE"           { MYECHO; yylval.LString.l = LEXLINECOUNTER; return INCOMING_EDGES; }
