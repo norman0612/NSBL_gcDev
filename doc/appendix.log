@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=latex 2012.5.5)  5 MAY 2012 22:57
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=latex 2012.5.5)  5 MAY 2012 23:00
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -247,21 +247,21 @@ File: lstmisc.sty 2007/02/22 1.4 (Carsten Heinz)
 ) (./appendix.aux)
 \openout1 = `appendix.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 55.
-LaTeX Font Info:    ... okay on input line 55.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 55.
-LaTeX Font Info:    ... okay on input line 55.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 55.
-LaTeX Font Info:    ... okay on input line 55.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 55.
-LaTeX Font Info:    ... okay on input line 55.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 55.
-LaTeX Font Info:    ... okay on input line 55.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 55.
-LaTeX Font Info:    ... okay on input line 55.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 55.
-LaTeX Font Info:    ... okay on input line 55.
-LaTeX Font Info:    Try loading font information for OT1+ptm on input line 55.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 59.
+LaTeX Font Info:    ... okay on input line 59.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 59.
+LaTeX Font Info:    ... okay on input line 59.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 59.
+LaTeX Font Info:    ... okay on input line 59.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 59.
+LaTeX Font Info:    ... okay on input line 59.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 59.
+LaTeX Font Info:    ... okay on input line 59.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 59.
+LaTeX Font Info:    ... okay on input line 59.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 59.
+LaTeX Font Info:    ... okay on input line 59.
+LaTeX Font Info:    Try loading font information for OT1+ptm on input line 59.
 
 (/usr/share/texmf/tex/latex/psnfss/ot1ptm.fd
 File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
@@ -301,7 +301,7 @@ File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 \AtBeginShipoutBox=\box29
-Package hyperref Info: Link coloring ON on input line 55.
+Package hyperref Info: Link coloring ON on input line 59.
 (/usr/share/texmf/tex/latex/hyperref/nameref.sty
 Package: nameref 2010/04/30 v2.40 Cross-referencing by name of section
 
@@ -310,9 +310,9 @@ Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 )
 \c@section@level=\count108
 )
-LaTeX Info: Redefining \ref on input line 55.
-LaTeX Info: Redefining \pageref on input line 55.
-LaTeX Info: Redefining \nameref on input line 55.
+LaTeX Info: Redefining \ref on input line 59.
+LaTeX Info: Redefining \pageref on input line 59.
+LaTeX Info: Redefining \nameref on input line 59.
  (./appendix.out)
 (./appendix.out)
 \@outlinefile=\write3
@@ -320,13 +320,15 @@ LaTeX Info: Redefining \nameref on input line 55.
 
 \c@lstlisting=\count109
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 57.
+(Font)              <12> on input line 61.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 57.
+(Font)              <8> on input line 61.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 57.
+(Font)              <6> on input line 61.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 61.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <14.4> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 58.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 62.
  (./appendix.toc
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 1.
@@ -334,45 +336,45 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10> not available
 \tf@toc=\write4
 \openout4 = `appendix.toc'.
 
-LaTeX Font Info:    Try loading font information for OT1+pcr on input line 60.
+LaTeX Font Info:    Try loading font information for OT1+pcr on input line 64.
  (/usr/share/texmf/tex/latex/psnfss/ot1pcr.fd
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
 ) (../src/LexAly.l [1
 
 ] [2]) (../src/Parser.y [3] [4] [5] [6] [7] [8] [9]
-[10] [11] [12]) (../src/ASTree.h [13] [14]) (../src/ASTree.c [15] [16] [17]
+[10] [11] [12] [13]) (../src/ASTree.h [14]) (../src/ASTree.c [15] [16] [17]
 [18] [19]) (../src/SymbolTable.h [20] [21]) (../src/SymbolTable.c [22] [23]
 [24] [25]) (../src/SymbolTableUtil.h) (../src/SymbolTableUtil.c [26] [27]
-[28]) (../src/CodeGen.h) [29] (../src/CodeGen.c [30] [31] [32] [33] [34]
+[28]) (../src/CodeGen.h [29]) (../src/CodeGen.c [30] [31] [32] [33] [34]
 [35] [36] [37] [38] [39] [40] [41] [42] [43] [44] [45] [46] [47] [48] [49]
-[50] [51] [52] [53]) (../src/CodeGenUtil.h) [54] (../src/CodeGenUtil.c [55]
-[56] [57]) (../src/Error.h [58]) (../src/Error.c) [59] (../src/util.h)
-(../src/util.c [60]) (../src/global.h) (../src/nsbl.h) (../src/type.h [61])
+[50] [51] [52] [53]) (../src/CodeGenUtil.h [54]) (../src/CodeGenUtil.c [55]
+[56] [57]) (../src/Error.h [58]) (../src/Error.c [59]) (../src/util.h)
+(../src/util.c [60]) (../src/global.h) (../src/nsbl.h) [61] (../src/type.h)
 (../src/operator.h) (../src/Derivedtype.h [62] [63] [64]) (../src/Derivedtype.c
 [65] [66] [67] [68] [69] [70] [71] [72] [73] [74] [75] [76] [77] [78] [79]
-[80] [81] [82] [83]) (../src/testonly/graph_lib_test.c [84] [85] [86] [87])
+[80] [81] [82] [83]) [84] (../src/testonly/graph_lib_test.c [85] [86] [87])
 (../src/graph.xml) (../src/NSBLio.h [88]) (../src/NSBLio.c)
 (../src/FileReadWrite.h) (../src/FileReadWrite.c [89] [90] [91] [92] [93]
 [94] [95] [96] [97]) (../src/testonly/fileReadWriteTS.c [98] [99] [100])
-(../src/GC.h) [101] (../src/GC.c) (../src/Makefile [102] [103])
+(../src/GC.h [101]) (../src/GC.c) [102] (../src/Makefile [103])
 (../src/genScript.sh)
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 117.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 121.
  [104]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 117.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 121.
  (./appendix.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 117.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 117.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 121.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 121.
 Package rerunfilecheck Info: File `appendix.out' has not changed.
 (rerunfilecheck)             Checksum: CD827FE09302F9F375BC1FBC57FF05AD;549.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 117.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 121.
  ) 
 Here is how much of TeX's memory you used:
- 9229 strings out of 493634
- 134735 string characters out of 3150863
- 846531 words of memory out of 3500000
- 12393 multiletter control sequences out of 15000+200000
- 10381 words of font info for 32 fonts, out of 3000000 for 9000
+ 9232 strings out of 493634
+ 134775 string characters out of 3150863
+ 843949 words of memory out of 3500000
+ 12396 multiletter control sequences out of 15000+200000
+ 11395 words of font info for 34 fonts, out of 3000000 for 9000
  831 hyphenation exceptions out of 8191
- 35i,6n,49p,316b,1756s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 36i,11n,49p,316b,1744s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on appendix.dvi (104 pages, 5784156 bytes).
+Output written on appendix.dvi (104 pages, 5781236 bytes).
