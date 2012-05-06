@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=latex 2012.5.5)  5 MAY 2012 19:52
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=latex 2012.5.5)  5 MAY 2012 20:17
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -343,34 +343,29 @@ File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
 [59]) (../src/global.h [60]) (../src/nsbl.h) (../src/type.h) (../src/operator.h
 [61]) (../src/Derivedtype.h [62] [63]) (../src/Derivedtype.c [64] [65] [66]
 [67] [68] [69] [70] [71] [72] [73] [74] [75] [76] [77] [78] [79] [80] [81]
-[82] [83]) (../src/graph.xml [84]) (../src/NSBLio.h) (../src/NSBLio.c)
-(../src/FileReadWrite.h [85]) (../src/FileReadWrite.c [86] [87] [88] [89]
-[90] [91] [92] [93]) (../src/GC.h [94]) (../src/GC.c [95]) (../src/Makefile
-[96]) (../src/genScript.sh [97])
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 114.
- [98]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 114.
- (./appendix.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 114.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 114.
+[82] [83]) (../src/testonly/graph_lib_test.c [84] [85] [86]) (../src/graph.xml
+[87]) (../src/NSBLio.h) (../src/NSBLio.c [88]) (../src/FileReadWrite.h)
+(../src/FileReadWrite.c [89] [90] [91] [92] [93] [94] [95] [96] [97])
+(../src/testonly/fileReadWriteTS.c [98] [99] [100]) (../src/GC.h) (../src/GC.c
+[101]) (../src/Makefile [102]) (../src/genScript.sh [103])
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 116.
+ [104]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 116.
 
-
-Package rerunfilecheck Warning: File `appendix.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `appendix.out':
-(rerunfilecheck)             Before: 312643C7AE9C860D289ED9DDADE4DC0F;534
-(rerunfilecheck)             After:  CD827FE09302F9F375BC1FBC57FF05AD;549.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 114.
+(./appendix.aux)
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 116.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 116.
+Package rerunfilecheck Info: File `appendix.out' has not changed.
+(rerunfilecheck)             Checksum: CD827FE09302F9F375BC1FBC57FF05AD;549.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 116.
  ) 
 Here is how much of TeX's memory you used:
- 9092 strings out of 493634
- 133117 string characters out of 3150863
+ 9226 strings out of 493634
+ 134694 string characters out of 3150863
  852148 words of memory out of 3500000
- 12266 multiletter control sequences out of 15000+200000
+ 12393 multiletter control sequences out of 15000+200000
  9862 words of font info for 31 fonts, out of 3000000 for 9000
  831 hyphenation exceptions out of 8191
  35i,6n,49p,316b,1748s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on appendix.dvi (98 pages, 5447100 bytes).
+Output written on appendix.dvi (104 pages, 5785388 bytes).
