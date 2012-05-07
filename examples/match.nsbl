@@ -26,7 +26,7 @@ vlist vertices = g.allV;
 
 elist etmp=vertices|outE;
 
-elist edges=etmp?[@weight>10 || @name=="e1"];
+elist edges=etmp?[@weight>10 || @name=="e1" && e1.relation == "a"];
 
 
 foreach(edge e: edges)
