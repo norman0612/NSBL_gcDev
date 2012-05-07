@@ -284,7 +284,7 @@ B
 	GList* check_verticesID;
 	char temp[100];
 	char str[100];
-    char * old_vID, *old_eID;
+    char old_vID[100],old_eID[100];
 /*		
 	strcpy(filepath, fileloc);
 
@@ -334,7 +334,7 @@ B
                                 MXML_DESCEND))
 		 {
 			 node = mxmlGetFirstChild(node);//vertex id
-			 old_vID = (char *) mxmlGetText(node,NULL);
+			 strcpy(old_vID, mxmlGetText(node,NULL));
 			 //printf("old vertex id: %s\n", old_vID);
 			 int nvID = new_vertexId();
 			 int len = snprintf(str, 100, "%ld", -nvID);
@@ -401,7 +401,7 @@ B
                                 MXML_DESCEND))
     {
 			 node = mxmlGetFirstChild(node);//edge id
-             old_eID = (char*) mxmlGetText(node,NULL);
+             strcpy(old_eID, mxmlGetText(node,NULL));
              //printf("old edge id: %s\n", old_eID);
              int neID = (long int) new_edgeId();
              int len = snprintf(str, 100, "%ld",-neID);
@@ -476,7 +476,7 @@ B
                                 MXML_DESCEND))
 		 {
 			 node = mxmlGetFirstChild(node);//vertex id
-			 old_vID = (char*) mxmlGetText(node,NULL);
+             strcpy(old_vID, mxmlGetText(node,NULL));
 			 int nvID = atoi(old_vID);
 			 int len = snprintf(str, 100, "%ld", -nvID);
 			 mxmlSetText(node, 0, str);
@@ -492,7 +492,7 @@ B
 										NULL, NULL,
 										MXML_DESCEND))
 				{
-                    old_vID = (char*) mxmlGetText(node_loop,NULL);
+                    strcpy(old_vID, mxmlGetText(node,NULL));
                     int nvID = atoi(old_vID);
                     int len = snprintf(str, 100, "%ld", -nvID);
                     mxmlSetText(node_loop, 0, str);
@@ -509,7 +509,7 @@ B
 										NULL, NULL,
 										MXML_DESCEND))
 				{
-                    old_vID = (char*) mxmlGetText(node_loop,NULL);
+                    strcpy(old_vID, mxmlGetText(node,NULL));
                     int nvID = atoi(old_vID);
                     int len = snprintf(str, 100, "%ld", -nvID);
                     mxmlSetText(node_loop, 0, str);
@@ -528,7 +528,7 @@ B
                                 MXML_DESCEND))
     {
 			 node = mxmlGetFirstChild(node);//edge id
-             old_eID = (char *) mxmlGetText(node,NULL);
+             strcpy(old_eID, mxmlGetText(node,NULL));
              int neID = atoi(old_eID);
              int len = snprintf(str, 100, "%ld",-neID);
              mxmlSetText(node, 0, str);
@@ -544,7 +544,7 @@ B
 										NULL, NULL,
 										MXML_DESCEND))
 				{
-                    old_eID = (char *)mxmlGetText(node_loop,NULL);
+                    strcpy(old_eID, mxmlGetText(node,NULL));
                     int neID = atoi(old_eID);
                     int len = snprintf(str, 100, "%ld",-neID);
 				    mxmlSetText(node_loop, 0, str);
@@ -562,7 +562,7 @@ B
 										NULL, NULL,
 										MXML_DESCEND))
 				{
-                    old_eID = (char*) mxmlGetText(node_loop,NULL);
+                    strcpy(old_eID, mxmlGetText(node,NULL));
                     int neID = atoi(old_eID);
                     int len = snprintf(str, 100, "%ld",-neID);
                     mxmlSetText(node_loop, 0, str);

@@ -11,17 +11,17 @@
 #define LIST_T  VLIST_T
 // may have problem when delete a ...
 EdgeId new_edgeId(){
-    static EdgeId eid = 0;
+    static EdgeId eid = 1;
     return eid++;
 }
 
 VertexId new_vertexId(){
-    static VertexId vid = 0;
+    static VertexId vid = 1;
     return vid++;
 }
 
 GraphId new_graphId(){
-    static GraphId gid = 0;
+    static GraphId gid = 1;
     return gid++;
 }
 
