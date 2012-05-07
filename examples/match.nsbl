@@ -24,7 +24,10 @@ g<:e2;
 
 vlist vertices = g.allV;
 
-elist edges=vertices|outE?[@weight>10];
+elist etmp=vertices|outE;
+
+elist edges=etmp?[@weight>10 || @name=="e1"];
+
 
 foreach(edge e: edges)
 {	print<<e;

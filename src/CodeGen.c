@@ -244,7 +244,6 @@ int codeGen (struct Node * node) {
                         node->code = strCatAlloc("", 1, lf->code);
                     }
                     node->type = DYNAMIC_T;
-                    //node->tmp[0] = REMOVE_DYN;
                 }
                 else  { // STATIC = DYNAMIC
                     frontDeclExp = strRightCatAlloc(frontDeclExp, "", 11,
@@ -386,7 +385,6 @@ int codeGen (struct Node * node) {
                     );
                     node->code = strCatAlloc("",1, e->bind);
                 }
-                node->tmp[0] = REMOVE_DYN;
                 node->type = DYN_BOOL_T; 
             }
             break;
