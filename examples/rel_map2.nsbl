@@ -1,0 +1,104 @@
+graph g1;
+string file = "rel_map.xml";
+file >> g1;
+
+print << g1;
+
+print_graph(g1);
+
+int print_graph(graph g){
+	vlist vl1 = g.allV;
+	print << "NODES IN GRAPH:\n";
+	foreach(vertex vt: vl1){
+		print <<vt.n<< " : ";	
+	}
+	print <<"\n---------------------\n";
+	print <<"EDGES IN GRAPH:\n";
+	elist el1 = g.allE;
+	foreach(edge et: el1){
+		vertex vs = get_edge_start(et);
+		print <<"["<<vs.n<<"-->";
+		vertex ve = get_edge_end(et);
+		print <<ve.n<<"] | ";
+	}
+	return 0;
+}
+
+int follow(graph g, vertex follower, vertex followee ){
+    edge e;
+    e: follower -> followee;
+    e.follow = true;
+    e.level = 1;
+    g<:e;
+    return 0;
+}
+
+int set_level(vertex follower, vertex followee, int level){
+    vlist vl1;
+    vl1 <: follower;
+    elist el1 = vl1|outE;
+    foreach(edge e: el1){
+        elist el2;
+        el2<:e;
+        vlist vl2 = el2|endV;
+        foreach(vertex v : vl2){
+            if(v==followee){
+                e.level = level;
+            }
+        }
+    }
+    return 0;
+}
+
+edge get_edge(vertex follower, vertex followee){
+    vlist vl1;
+    vl1 <: follower;
+    elist el1 = vl1|outE;
+    foreach(edge e: el1){
+        elist el2;
+        el2<:e;
+        vlist vl2 = el2|endV;
+        foreach(vertex v : vl2){
+            if(v==followee){
+                e.isnull = false;
+                return e;
+            }
+        }
+    }
+    edge en;
+    en.isnull = true;
+    return en;
+}
+
+vertex get_edge_start(edge e){
+    elist el1;
+    el1<:e;
+    vlist vl = el1|strtV;
+    if(length(vl)==1){
+        vertex vt = vl[0];
+        vt.isnull = false;
+        return vt;
+    }
+    else{
+        vertex vt;
+        vt.isnull = true;
+        return vt;
+    }
+}
+
+vertex get_edge_end(edge e){
+    elist el1;
+    el1<:e;
+    vlist vl = el1|endV;
+    if(length(vl)==1){
+        vertex vt = vl[0];
+        vt.isnull = false;
+        return vt;
+    }
+    else{
+        vertex vt;
+        vt.isnull = true;
+        return vt;
+    }
+}
+

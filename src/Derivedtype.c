@@ -980,7 +980,7 @@ int print_e(EdgeType* e){
 		return 0;
     printf("<Edge: %ld>(", e->id);
 	if(e->start!=NULL)
-		printf("vstart%ld]-->", e->start->id);
+		printf("vstart[%ld]-->", e->start->id);
 	else
 		printf("vstart[NULL]-->");
 	if(e->end!=NULL)
@@ -1014,7 +1014,6 @@ int print_e_attr(EdgeType* e){
     GList* klist = g_hash_table_get_keys(e->attributes);
     int l = g_list_length(klist);
     int n = 0;
-    printf("\nEdge Attributes:--------------\n");
     printf("<Edge> : Id = %ld \n", e->id);
 	printf("vstart");
 	if(e->start!=NULL){
@@ -1034,13 +1033,13 @@ int print_e_attr(EdgeType* e){
 	}
 	else
 		printf("[NULL]");
-	printf("\n");
-	printf("------------------------------\n");
+    printf("\nEdge Attributes:--------------\n");
     for(n; n<l; n++){
         void* key = g_list_nth_data(klist, n);
         Attribute* value = g_hash_table_lookup(e->attributes, key);
         output_attr( (char *) key, value, stdout);
     }
+	printf("------------------------------\n");
     g_list_free(klist);
     return 0;
 }

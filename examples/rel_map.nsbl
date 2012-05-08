@@ -1,0 +1,537 @@
+vertex 	Alex, Ben, Cindy, Danny, Emma, 
+		Fred, Gary, Hillary, Ian, Jane, Kelvin, Larry,
+		Marc, Nancy, Oliver, Paul, Qian, Ramsey, Susan, 
+		Ted, Uri, Victor, Wade, Yang;
+
+//n: name
+//w. weight
+//g: gender
+//a: age
+Alex.n = "Alex"; Alex.w = 130.5; Alex.g = "m"; Alex.age = 23;
+Ben.n = "Ben", Ben.w = 140.3; Ben.g = "m"; Ben.age = 24;
+Cindy.n = "Cindy"; Cindy.w = 124.3; Cindy.g = "f"; Cindy.age = 22;
+Danny.n = "Danny"; Danny.w = 150.7; Danny.g = "m"; Danny.age = 31;
+Emma.n = "Emma"; Emma.w = 138.5; Emma.g = "f"; Emma.age = 51;
+Fred.n = "Fred"; Fred.w = 120.5; Fred.g = "m"; Fred.age = 79;
+Gary.n = "Gary"; Gary.w = 132.3; Gary.g = "m"; Gary.age = 24;
+Hillary.n = "Hillary"; Hillary.w = 135.5; Hillary.g = "f"; Hillary.age = 53;
+Ian.n = "Ian"; Ian.w = 138.5; Ian.g = "m"; Ian.age = 23;
+Jane.n = "Jane"; Jane.w = 123.5; Jane.g = "f"; Jane.age = 23;
+Kelvin.n = "Kelvin"; Kelvin.w = 155.5; Kelvin.g = "m"; Kelvin.age = 22;
+Larry.n = "Larry"; Larry.w = 132.8; Larry.g = "m"; Larry.age = 54;
+Marc.n = "Marc"; Marc.w = 160.5; Marc.g = "m"; Marc.age = 58;
+Nancy.n = "Nancy"; Nancy.w = 140.5; Nancy.g = "f"; Nancy.age = 53;
+Oliver.n = "Oliver"; Oliver.w = 184.5; Oliver.g = "m"; Oliver.age = 24;
+Paul.n = "Paul"; Paul.w = 157.5; Paul.g = "m"; Paul.age = 22;
+Qian.n = "Qian"; Qian.w = 118.5; Qian.g = "f"; Qian.age = 23;
+Ramsey.n = "Ramsey"; Ramsey.w = 132.5; Ramsey.g = "m"; Ramsey.age = 22;
+Susan.n = "Susan"; Susan.w = 144.5; Susan.g = "f"; Susan.age = 23;
+Ted.n = "Ted"; Ted.w = 130.5; Ted.g = "m"; Ted.age = 23;
+Uri.n = "Uri"; Uri.w = 150.5; Uri.g = "m"; Uri.age = 44;
+Victor.n = "Victor"; Victor.w = 140.5; Victor.g = "m"; Victor.age = 36;
+Wade.n = "Wade"; Wade.w = 130.5; Wade.g = "m"; Wade.age = 53;
+Yang.n = "Yang"; Yang.w = 137.5; Yang.g = "f"; Yang.age = 57;
+
+graph g1;
+vlist vl_all = [Alex, Ben, Cindy, Danny, Emma, 
+		Fred, Gary, Hillary, Ian, Jane, Kelvin, Larry,
+		Marc, Nancy, Oliver, Paul, Qian, Ramsey, Susan, 
+		Ted, Uri, Victor, Wade, Yang];
+g1 <: vl_all;
+//print << g1;
+
+//edge
+//rel: relation
+//l: level
+//g: group
+//f: follow
+
+edge te;
+
+//Alex
+follow(g1, Alex, Ben);
+te = get_edge(Alex, Ben);
+te.level = 5;
+te.rel = "brother";
+follow(g1, Alex, Cindy);
+te = get_edge(Alex, Cindy);
+te.level = 5;
+te.rel = "sister";
+follow(g1, Alex, Emma);
+te = get_edge(Alex, Emma);
+te.level = 4;
+te.rel = "mother";
+follow(g1, Alex, Fred);
+te = get_edge(Alex, Fred);
+te.level = 6;
+te.rel = "grand father";
+
+//Ben
+follow(g1, Ben, Alex);
+te = get_edge(Ben, Alex);
+te.level = 6;
+te.rel = "brother";
+follow(g1, Ben, Cindy);
+te = get_edge(Ben, Cindy);
+te.level = 4;
+te.rel = "sister";
+follow(g1, Ben, Emma);
+te = get_edge(Ben, Emma);
+te.level = 3;
+te.rel = "mother";
+follow(g1, Ben, Fred);
+te = get_edge(Ben, Fred);
+te.level = 4;
+te.rel = "grand father";
+follow(g1, Ben, Gary);
+te = get_edge(Ben, Gary);
+te.level = 3;
+te.rel = "friend";
+follow(g1, Ben, Ian);
+te = get_edge(Ben, Ian);
+te.level = 2;
+te.rel = "friend";
+follow(g1, Ben, Kelvin);
+te = get_edge(Ben, Kelvin);
+te.level = 2;
+te.rel = "friend";
+
+
+//Cindy
+follow(g1, Cindy, Alex);
+te = get_edge(Cindy, Alex);
+te.level = 3;
+te.rel = "brother";
+follow(g1, Cindy, Ben);
+te = get_edge(Cindy, Ben);
+te.level = 3;
+te.rel = "brother";
+follow(g1, Cindy, Emma);
+te = get_edge(Cindy, Emma);
+te.level = 5;
+te.rel = "mother";
+follow(g1, Cindy, Fred);
+te = get_edge(Cindy, Fred);
+te.level = 7;
+te.rel = "grand father";
+follow(g1, Cindy, Jane);
+te = get_edge(Cindy, Jane);
+te.level = 3;
+te.rel = "friend";
+follow(g1, Cindy, Susan);
+te = get_edge(Cindy, Susan);
+te.level = 4;
+te.rel = "friend";
+follow(g1, Cindy, Gary);
+te = get_edge(Cindy, Gary);
+te.level = 2;
+te.rel = "friend";
+
+//Danny
+follow(g1, Danny, Ben);
+te = get_edge(Danny, Ben);
+te.level = 2;
+te.rel = "student";
+follow(g1, Danny, Gary);
+te = get_edge(Danny, Gary);
+te.level = 2;
+te.rel = "student";
+follow(g1, Danny, Jane);
+te = get_edge(Danny, Jane);
+te.level = 2;
+te.rel = "student";
+follow(g1, Danny, Ian);
+te = get_edge(Danny, Ian);
+te.level = 2;
+te.rel = "student";
+follow(g1, Danny, Uri);
+te = get_edge(Danny, Uri);
+te.level = 3;
+te.rel = "colleague";
+follow(g1, Danny, Victor);
+te = get_edge(Danny, Victor);
+te.level = 3;
+te.rel = "colleague";
+
+//Emma
+follow(g1, Emma, Alex);
+te = get_edge(Emma, Alex);
+te.level = 6;
+te.rel = "Son";
+follow(g1, Emma, Ben);
+te = get_edge(Emma, Ben);
+te.level = 6;
+te.rel = "son";
+follow(g1, Emma, Cindy);
+te = get_edge(Emma, Cindy);
+te.level = 6;
+te.rel = "daughter";
+follow(g1, Emma, Fred);
+te = get_edge(Emma, Fred);
+te.level = 6;
+te.rel = "father";
+
+//Fred
+follow(g1, Fred, Cindy);
+te = get_edge(Fred, Cindy);
+te.level = 6;
+te.rel = "grand daughter";
+follow(g1, Fred, Alex);
+te = get_edge(Fred, Alex);
+te.level = 6;
+te.rel = "grand son";
+follow(g1, Fred, Ben);
+te = get_edge(Fred, Ben);
+te.level = 6;
+te.rel = "grand son";
+follow(g1, Fred, Emma);
+te = get_edge(Fred, Emma);
+te.level = 6;
+te.rel = "daughter";
+
+//Gary
+follow(g1, Gary, Ben);
+te = get_edge(Gary, Ben);
+te.level = 3;
+te.rel = "friend";
+follow(g1, Gary, Jane);
+te = get_edge(Gary, Jane);
+te.level = 6;
+te.rel = "girl friend";
+follow(g1, Gary, Oliver);
+te = get_edge(Gary, Oliver);
+te.level = 6;
+te.rel = "friend";
+
+//Hillary
+follow(g1, Hillary, Ian);
+te = get_edge(Hillary, Ian);
+te.level = 5;
+te.rel = "son";
+
+//Ian
+follow(g1, Ian, Hillary);
+te = get_edge(Ian, Hillary);
+te.level = 5;
+te.rel = "mother";
+follow(g1, Ian, Jane);
+te = get_edge(Ian, Jane);
+te.level = 5;
+te.rel = "sister";
+follow(g1, Ian, Ben);
+te = get_edge(Ian, Ben);
+te.level = 3;
+te.rel = "friend";
+follow(g1, Ian, Paul);
+te = get_edge(Ian, Paul);
+te.level = 4;
+te.rel = "friend";
+
+//Jane
+follow(g1, Jane, Ian);
+te = get_edge(Jane, Ian);
+te.level = 4;
+te.rel = "brother";
+follow(g1, Jane, Gary);
+te = get_edge(Jane, Gary);
+te.level = 6;
+te.rel = "boy friend";
+follow(g1, Jane, Kelvin);
+te = get_edge(Jane, Kelvin);
+te.level = 2;
+te.rel = "friend";
+follow(g1, Jane, Susan);
+te = get_edge(Jane, Susan);
+te.level = 4;
+te.rel = "friend";
+follow(g1, Jane, Hillary);
+te = get_edge(Jane, Hillary);
+te.level = 6;
+te.rel = "mother";
+
+//Kelvin
+follow(g1, Kelvin, Larry);
+te = get_edge(Kelvin, Larry);
+te.level = 5;
+te.rel = "father";
+follow(g1, Kelvin, Jane);
+te = get_edge(Kelvin, Jane);
+te.level = 2;
+te.rel = "friend";
+follow(g1, Kelvin, Oliver);
+te = get_edge(Kelvin, Oliver);
+te.level = 3;
+te.rel = "friend";
+
+//Larry
+follow(g1, Larry, Kelvin);
+te = get_edge(Larry, Kelvin);
+te.level = 5;
+te.rel = "son";
+
+//Marc
+follow(g1, Marc, Oliver);
+te = get_edge(Marc, Oliver);
+te.level = 6;
+te.rel = "son";
+
+//Nancy
+follow(g1, Nancy, Paul);
+te = get_edge(Nancy, Paul);
+te.level = 6;
+te.rel = "son";
+
+//Oliver
+follow(g1, Oliver, Kelvin);
+te = get_edge(Oliver, Kelvin);
+te.level = 3;
+te.rel = "friend";
+follow(g1, Oliver, Paul);
+te = get_edge(Oliver, Paul);
+te.level = 4;
+te.rel = "friend";
+follow(g1, Oliver, Marc);
+te = get_edge(Oliver, Marc);
+te.level = 5;
+te.rel = "father";
+
+//Paul
+follow(g1, Paul, Oliver);
+te = get_edge(Paul, Oliver);
+te.level = 3;
+te.rel = "friend";
+follow(g1, Paul, Qian);
+te = get_edge(Paul, Qian);
+te.level = 5;
+te.rel = "girl friend";
+follow(g1, Paul, Nancy);
+te = get_edge(Paul, Nancy);
+te.level = 6;
+te.rel = "mother";
+
+//Qian
+follow(g1, Qian, Paul);
+te = get_edge(Qian, Paul);
+te.level = 5;
+te.rel = "boy friend";
+follow(g1, Qian, Susan);
+te = get_edge(Qian, Susan);
+te.level = 4;
+te.rel = "friend";
+follow(g1, Qian, Yang);
+te = get_edge(Qian, Yang);
+te.level = 6;
+te.rel = "mother";
+
+//Ramsey
+follow(g1, Ramsey, Susan);
+te = get_edge(Ramsey, Susan);
+te.level = 6;
+te.rel = "daughter";
+
+//Susan
+follow(g1, Susan, Ramsey);
+te = get_edge(Susan, Ramsey);
+te.level = 6;
+te.rel = "father";
+follow(g1, Susan, Qian);
+te = get_edge(Susan, Qian);
+te.level = 3;
+te.rel = "friend";
+follow(g1, Susan, Alex);
+te = get_edge(Susan, Alex);
+te.level = 2;
+te.rel = "friend";
+follow(g1, Susan, Jane);
+te = get_edge(Susan, Jane);
+te.level = 4;
+te.rel = "friend";
+follow(g1, Susan, Ted);
+te = get_edge(Susan, Ted);
+te.level = 3;
+te.rel = "friend";
+
+//Ted
+follow(g1, Ted, Susan);
+te = get_edge(Ted, Susan);
+te.level = 3;
+te.rel = "friend";
+follow(g1, Ted, Ben);
+te = get_edge(Ted, Ben);
+te.level = 4;
+te.rel = "friend";
+follow(g1, Ted, Wade);
+te = get_edge(Ted, Wade);
+te.level = 5;
+te.rel = "father";
+
+//Uri
+follow(g1, Uri, Cindy);
+te = get_edge(Uri, Cindy);
+te.level = 2;
+te.rel = "student";
+follow(g1, Uri, Kelvin);
+te = get_edge(Uri, Kelvin);
+te.level = 2;
+te.rel = "student";
+follow(g1, Uri, Susan);
+te = get_edge(Uri, Susan);
+te.level = 2;
+te.rel = "student";
+follow(g1, Uri, Ian);
+te = get_edge(Uri, Ian);
+te.level = 2;
+te.rel = "student";
+follow(g1, Uri, Danny);
+te = get_edge(Uri, Danny);
+te.level = 3;
+te.rel = "colleague";
+follow(g1, Uri, Victor);
+te = get_edge(Uri, Victor);
+te.level = 3;
+te.rel = "colleague";
+
+//Victor
+follow(g1, Victor, Paul);
+te = get_edge(Victor, Paul);
+te.level = 2;
+te.rel = "student";
+follow(g1, Victor, Oliver);
+te = get_edge(Victor, Oliver);
+te.level = 2;
+te.rel = "student";
+follow(g1, Victor, Qian);
+te = get_edge(Victor, Qian);
+te.level = 2;
+te.rel = "student";
+follow(g1, Victor, Alex);
+te = get_edge(Victor, Alex);
+te.level = 2;
+te.rel = "student";
+follow(g1, Victor, Uri);
+te = get_edge(Victor, Uri);
+te.level = 3;
+te.rel = "colleague";
+follow(g1, Victor, Danny);
+te = get_edge(Victor, Danny);
+te.level = 3;
+te.rel = "colleague";
+
+//Wade
+follow(g1, Wade, Ted);
+te = get_edge(Wade, Ted);
+te.level = 6;
+te.rel = "son";
+
+//Yang
+follow(g1, Yang, Qian);
+te = get_edge(Yang, Qian);
+te.level = 6;
+te.rel = "daughter";
+
+
+//operation
+print << g1;
+print_graph(g1);
+
+string file = "rel_map.xml";
+
+file << g1;
+
+int print_graph(graph g){
+	vlist vl1 = g.allV;
+	print << "NODES IN GRAPH:\n";
+	foreach(vertex vt: vl1){
+		print <<vt.n<< " : ";	
+	}
+	print <<"\n---------------------\n";
+	print <<"EDGES IN GRAPH:\n";
+	elist el1 = g.allE;
+	foreach(edge et: el1){
+		vertex vs = get_edge_start(et);
+		print <<"["<<vs.n<<"-->";
+		vertex ve = get_edge_end(et);
+		print <<ve.n<<"] | ";
+	}
+	return 0;
+}
+
+int follow(graph g, vertex follower, vertex followee ){
+    edge e;
+    e: follower -> followee;
+    e.follow = true;
+    e.level = 1;
+    g<:e;
+    return 0;
+}
+
+int set_level(vertex follower, vertex followee, int level){
+    vlist vl1;
+    vl1 <: follower;
+    elist el1 = vl1|outE;
+    foreach(edge e: el1){
+        elist el2;
+        el2<:e;
+        vlist vl2 = el2|endV;
+        foreach(vertex v : vl2){
+            if(v==followee){
+                e.level = level;
+            }
+        }
+    }
+    return 0;
+}
+
+edge get_edge(vertex follower, vertex followee){
+    vlist vl1;
+    vl1 <: follower;
+    elist el1 = vl1|outE;
+    foreach(edge e: el1){
+        elist el2;
+        el2<:e;
+        vlist vl2 = el2|endV;
+        foreach(vertex v : vl2){
+            if(v==followee){
+                e.isnull = false;
+                return e;
+            }
+        }
+    }
+    edge en;
+    en.isnull = true;
+    return en;
+}
+
+vertex get_edge_start(edge e){
+    elist el1;
+    el1<:e;
+    vlist vl = el1|strtV;
+    if(length(vl)==1){
+        vertex vt = vl[0];
+        vt.isnull = false;
+        return vt;
+    }
+    else{
+        vertex vt;
+        vt.isnull = true;
+        return vt;
+    }
+}
+
+vertex get_edge_end(edge e){
+    elist el1;
+    el1<:e;
+    vlist vl = el1|endV;
+    if(length(vl)==1){
+        vertex vt = vl[0];
+        vt.isnull = false;
+        return vt;
+    }
+    else{
+        vertex vt;
+        vt.isnull = true;
+        return vt;
+    }
+}
+
+
