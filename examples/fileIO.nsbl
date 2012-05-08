@@ -1,0 +1,200 @@
+
+void findReachableVertices(graph g, vertex v)
+{
+        vlist l ;
+        l=g.allV;
+        vertex temp;
+        temp = v;
+        int no_of_vertices = 0;
+        int i = 0;
+        foreach(vertex vtemp: l){ vtemp.markT = false;}
+        foreach(vertex vt:l)
+        {       vlist lv;
+                lv <: vt;
+                print<<"===================VERTICES REACHABLE FROM: "<<vt.name<<" ======================\n";
+                if (!vt.markT)
+                {       i=0;
+                        while (i < length(lv))
+                        {
+                                vertex tv= lv[i];
+                                print<<"Traversed "<<tv.name<<"\n";
+                                elist le = lv|outE;
+                                //print<<"test edges\n"<<le;
+                                foreach (edge e : le)
+                                {
+                                        elist le1;
+                                        le1 <: e;
+                                        vlist lv1 = le1|endV;
+                                        //print<<"test vertices\n"<<lv1;
+                                        foreach(vertex v1: lv1) {lv <: v1;}
+                                        //print<<"test lv\n"<<lv;
+                                }
+                                i = i + 1;
+
+                        }
+                }
+        }
+	return;
+}
+
+void saveGraph(graph g, string loc)
+{
+        loc << g;
+        print<<"The graph provided has been saved in the given location.\n";
+
+	return;
+}
+
+graph readGraph(string loc)
+{
+        graph g;
+        loc >> g;
+        return g;
+}
+vertex v1,v2,v3,v4,v5,v6,v7,v8,v9,v10,v11,v12;
+v1.name = "v1";
+v2.name = "v2";
+v3.name = "v3";
+v4.name = "v4";
+v5.name = "v5";
+v6.name = "v6";
+v7.name = "v7";
+v8.name = "v8";
+v9.name = "v9";
+v10.name = "v10";
+v11.name = "v11";
+v12.name = "v12";
+
+edge e1,e2,e3,e4,e5,e6,e7,e8,e9,e10,e11,e12,e13,e14,e15,e16,e17,e18,e19,e20,e21,e22,e23,e24,e25;
+
+e1:v1->v2;
+e2:v1->v3;
+e3:v2->v4;
+e4:v3->v5;
+e5:v1->v6;
+e6:v3->v6;
+e7:v5->v7;
+e8:v7->v8;
+e9:v9->v10;
+e10:v10->v11;
+e11:v9->v11;
+e12:v1->v12;
+e13:v12->v11;
+e14:v1->v9;
+e15:v2->v11;
+e16:v3->v8;
+e17:v5->v12;
+e18:v4->v9;
+e19:v3->v11;
+e20:v4->v12;
+e21:v12->v6;
+e22:v11->v8;
+e23:v7->v4;
+e24:v8->v2;
+e25:v9->v3;
+
+e1.name = "e1";
+e2.name = "e2";
+e3.name = "e3";
+e4.name = "e4";
+e5.name = "e5";
+e6.name = "e6";
+e7.name = "e7";
+e8.name = "e8";
+e9.name = "e9";
+e10.name = "e10";
+e11.name = "e11";
+e12.name = "e12";
+e13.name = "e13";
+e14.name = "e14";
+e15.name = "e15";
+e16.name = "e16";
+e17.name = "e17";
+e18.name = "e18";
+e19.name = "e19";
+e20.name = "e20";
+e21.name = "e21";
+e22.name = "e22";
+e23.name = "e23";
+e24.name = "e24";
+e25.name = "e25";
+
+
+graph g;
+
+g <: v1;
+g <: v2;
+g <: v3;
+g <: v4;
+g <: v5;
+g <: v6;
+g <: v7;
+g <: v8;
+g <: v9;
+g <: v10;
+g <: v11;
+g <: v12;
+
+
+g <: e1;
+g <: e2;
+g <: e3;
+g <: e4;
+g <: e5;
+g <: e6;
+g <: e7;
+g <: e8;
+g <: e9;
+g <: e10;
+g <: e11;
+g <: e12;
+g <: e13;
+g <: e14;
+g <: e15;
+g <: e16;
+g <: e17;
+g <: e18;
+g <: e19;
+g <: e20;
+g <: e21;
+g <: e22;
+g <: e23;
+g <: e24;
+g <: e25;
+
+string s = "demo.xml";
+
+int mainFunc(graph g, string s)
+{
+        //int i;
+	//saveGraph(g, s);
+	s << g;
+	//print<<"Graph saved\n";
+        //print<<g;
+        graph g1;
+	s >> g1;
+	//g1 = readGraph(s);
+	print<<"Graph read\n";	
+        //g1 = readGraph(s);
+        //print<<g1;
+	elist le = g1.allE;
+	foreach(edge e: le)
+	{	
+		elist ltemp = [e];
+		vlist lv1 = ltemp|strtV;
+		vertex vtemp = lv1[0];
+		vlist lv2 = ltemp|endV;
+		vertex vtemp2 = lv2[0];
+		print<<e.name<<":"<<vtemp.name<<"--->"<<vtemp2.name<<"\n";
+	}
+	print<<"\nusing start and end functions\n";
+        vlist lv = g1.allV;
+        vertex temp1 = lv[0];
+        
+        vertex temp2 = lv[length(lv) - 1];
+        
+        findReachableVertices(g1, temp1);
+        findReachableVertices(g1, temp2);
+	return 0;
+}
+mainFunc(g, s);
