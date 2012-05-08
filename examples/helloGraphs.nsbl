@@ -27,6 +27,16 @@ elist le = g.allE;
 
 int i = 0;
 
+float tmps;
+tmps = i;
+print << "i=" << i <<"\n";
+print << "tmps=" << tmps << "\n";
+;
+
+
+
+int j,k;
+
 for (i ; i < length(lv) ; i = i + 1)
 {	
 	vertex v = lv[i];
@@ -37,6 +47,20 @@ for (i=0; i < length(le); i = i+1)
 {
 	edge e = le[i];
 	print<<"Edge "<<e.name<<" says Hello Graphs!\n";
+
+
+    for  ( j=0; j<100; j=j+1) {
+        if (true) {
+   
+        
+        }
+        for ( k= 0; k<100; k=k+1) {
+
+
+
+        }
+    }
+
 }
 
 

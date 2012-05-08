@@ -439,17 +439,21 @@ string file = "rel_map.xml";
 file << g1;
 
 //get Cindy's friend
+print << "1> find all Cindy's friend\n\t";
 vlist vl_Cindy_friends = g1.allV?[@n=="Cindy"]|outE?[@rel=="friend"]|endV;
 print_vlist(vl_Cindy_friends);
 
 //get Cindy's friend's friends
+print << "2> find all Cindy's friend's friends\n\t";
 vlist vl_Cindy_friends_friends = g1.allV?[@n=="Cindy"]|outE?[@rel=="friend"]|endV|outE?[@rel=="friend"]|endV?[@n!="Cindy"];
 print_vlist(vl_Cindy_friends_friends);
 
-//vlist vl_Cindy_friends_friends_2 = g1.allV?[@n=="Cindy"]|outE?[@rel=="friend"]|endV|outE?[@rel=="friend"]|endV?[@n!="Cindy"&&(@g=="f"||@age>23)];
-//print_vlist(vl_Cindy_friends_friends_2);
+print << "3> find all Cindy's friend's friends, who is female or age > 23\n\t";
+vlist vl_Cindy_friends_friends_2 = g1.allV?[@n=="Cindy"]|outE?[@rel=="friend"]|endV|outE?[@rel=="friend"]|endV?[@n!="Cindy"&&(@g=="f"||@age>23)];
+print_vlist(vl_Cindy_friends_friends_2);
 
 //get student's parent
+print << "4> Uri's students' parents\n\t";
 vlist vl_uri_student_parent = g1.allV?[@n=="Uri"]|outE?[@rel=="student"]|endV|outE?[@rel=="father"||@rel=="mother"]|endV;
 print_vlist(vl_uri_student_parent);
 
