@@ -458,7 +458,6 @@ vlist vl_uri_student_parent = g1.allV?[@n=="Uri"]|outE?[@rel=="student"]|endV|ou
 print_vlist(vl_uri_student_parent);
 
 
-
 int print_vlist(vlist l){
 	foreach(vertex vt : l){
 		print<<vt.n<<" : ";	
